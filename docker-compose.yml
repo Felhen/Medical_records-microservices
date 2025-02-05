@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  mysql-medical_records:
+    container_name: mysql-Medical_records
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=medical_records
+      - MYSQL_ROOT_PASSWORD=1234567
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  springboot-medical_records:
+    container_name: springboot-Medical_records
+    build:
+      context: ./medical_records
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+       - spring.datasource.url=jdbc:mysql://mysql-medical_records:3306/medical_records
+    depends_on:
+      - mysql-medical_records
+    restart: on-failure
+    
+
+  react-medical_records:
+    container_name: react-Medical_records
+    build:
+      context: ./medical_records_front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - springboot-medical_records
+
+volumes:
+  mysql-data:
+
+
+
+# services:
+#   medical_records:
+#     build: medical_records
+#     restart: always
+#     environment:
+#       MYSQL_HOST: db
+#     networks:
+#       - react-spring
+#       - spring-mysql
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#   db:
+#     # We use a mariadb image which supports both amd64 & arm64 architecture
+#     image: mariadb:10.6.4-focal
+#     # If you really want to use MySQL, uncomment the following line
+#     #image: mysql:8.0.19
+#     environment:
+#       - MYSQL_DATABASE=medical_records
+#       - MYSQL_ROOT_PASSWORD=1234567
+#     restart: always
+#     healthcheck:
+#       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+#       interval: 3s
+#       retries: 5
+#       start_period: 30s
+#     volumes:
+#       - db-data:/var/lib/mysql
+#     networks:
+#       - spring-mysql
+#   medical_records_front:
+#     build:
+#       context: medical_records_front
+#       target: development
+#     ports:
+#       - 3000:3000
+#     volumes:
+#       - ./frontend/src:/code/src
+#       - /project/node_modules
+#     networks:
+#       - react-spring
+#     depends_on:
+#       - medical_records
+#     expose:
+#       - 3306
+#       - 33060
+# volumes:
+#   db-data: {}
+# networks:
+#   react-spring: {}
+#   spring-mysql: {}
