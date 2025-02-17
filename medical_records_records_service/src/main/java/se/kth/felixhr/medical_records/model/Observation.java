@@ -12,11 +12,13 @@ public class Observation {
     private Date observation_date;
     private String observation_info;
     private Long patientId;
+    private Long doctorId;
 
-    public Observation(Date observation_date, String observation_info, Long patientId) {
+    public Observation(Date observation_date, String observation_info, Long patientId, Long doctorId) {
         this.observation_date = observation_date;
         this.observation_info = observation_info;
         this.patientId = patientId;
+        this.doctorId = doctorId;
     }
 
     public Observation() {
@@ -55,4 +57,8 @@ public class Observation {
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
+
+    @Column(name = "doctor_id")
+    public Long getDoctorId(){ return doctorId; }
+    public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
 }

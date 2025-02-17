@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../context/AuthProvider";
 
 const AddEncounter = () => {
     const { patientId } = useParams();
-
+    const { userId } = useAuth();
+    const doctorId = userId;
+    
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
 
@@ -17,13 +20,13 @@ const AddEncounter = () => {
             const encounterDetails = {
                 date,
                 description,
+                doctorId,
             };
-
+            console.log(doctorId)
             const response = await axios.post(`http://localhost:8081/${patientId}/add_encounter`, encounterDetails);
 
             console.log(response.data);
-            // Redirect or perform any necessary actions after successful encounter addition
-            // ...
+            
         } catch (error) {
             // Handle encounter addition error
             console.error('Encounter addition failed:', error);

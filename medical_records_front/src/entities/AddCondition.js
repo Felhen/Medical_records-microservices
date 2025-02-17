@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../context/AuthProvider";
 
 const AddCondition = () => {
     const { patientId } = useParams();
-
+    const { userId } = useAuth();
+    const doctorId = userId;
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
     const [name, setName] = useState('');
@@ -23,6 +25,7 @@ const AddCondition = () => {
                 date,
                 description,
                 name,
+                doctorId,
             };
 
             const response = await axios.post(`http://localhost:8081/${patientId}/add_condition`, conditionDetails);

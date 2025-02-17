@@ -41,6 +41,9 @@ public class ConditionController {
         String conditionDateStr = (String) conditionData.get("date");
         String conditionInfo = (String) conditionData.get("description");
 
+        // Parse doctorId string into long
+        Long doctorId =  Long.valueOf(conditionData.get("doctorId").toString());
+
         // Parse encounter_date string into a Date object
         Date conditionDate = Date.valueOf(conditionDateStr);
 
@@ -51,7 +54,7 @@ public class ConditionController {
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             PatientDTO patientDTO = response.getBody();
 
-            Condition condition = new Condition(conditionName,  conditionInfo, conditionDate, patientId);
+            Condition condition = new Condition(conditionName,  conditionInfo, conditionDate, patientId, doctorId);
 
             // Save the Encounter object to the database
             conditionRepository.save(condition);

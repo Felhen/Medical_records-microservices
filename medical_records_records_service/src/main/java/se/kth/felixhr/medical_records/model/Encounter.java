@@ -13,12 +13,14 @@ public class Encounter {
     private Date encounter_date;
     private String encounter_info;
     private Long patientId;
+    private Long doctorId;
 
 
-    public Encounter(Date encounter_date, String encounter_info, Long patientId) {
+    public Encounter(Date encounter_date, String encounter_info, Long patientId, Long doctorId) {
         this.encounter_date = encounter_date;
         this.encounter_info = encounter_info;
         this.patientId = patientId;
+        this.doctorId = doctorId;
     }
 
     public Encounter() {
@@ -57,6 +59,10 @@ public class Encounter {
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
+
+    @Column(name = "doctor_id")
+    public Long getDoctorId(){ return doctorId; }
+    public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
 
 
 /*@ManyToOne(fetch = FetchType.EAGER)

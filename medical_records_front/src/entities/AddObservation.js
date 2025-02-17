@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../context/AuthProvider";
 
 const AddObservation = () => {
     const { patientId } = useParams();
+    const { userId } = useAuth();
+    const doctorId = userId;
 
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
@@ -17,6 +20,7 @@ const AddObservation = () => {
             const observationDetails = {
                 date,
                 description,
+                doctorId,
             };
 
             const response = await axios.post(`http://localhost:8081/${patientId}/add_observation`, observationDetails);

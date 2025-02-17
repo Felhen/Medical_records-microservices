@@ -41,6 +41,9 @@ public class ObservationController {
         String observationDateStr = (String) observationData.get("date");
         String observationInfo = (String) observationData.get("description");
 
+        // Parse doctorId string into long
+        Long doctorId =  Long.valueOf(observationData.get("doctorId").toString());
+
         // Parse encounter_date string into a Date object
         Date observationDate = Date.valueOf(observationDateStr);
 
@@ -51,7 +54,7 @@ public class ObservationController {
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             PatientDTO patientDTO = response.getBody();
 
-            Observation observation = new Observation(observationDate, observationInfo, patientId);
+            Observation observation = new Observation(observationDate, observationInfo, patientId, doctorId);
 
             // Save the Encounter object to the database
             observationRepository.save(observation);

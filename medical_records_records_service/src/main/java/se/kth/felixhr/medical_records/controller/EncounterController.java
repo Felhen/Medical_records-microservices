@@ -40,6 +40,9 @@ public class EncounterController {
         String encounterDateStr = (String) encounterData.get("date");
         String encounterInfo = (String) encounterData.get("description");
 
+        // Parse doctorId string into long
+        Long doctorId =  Long.valueOf(encounterData.get("doctorId").toString());
+
         // Parse encounter_date string into a Date object
         Date encounterDate = Date.valueOf(encounterDateStr);
 
@@ -51,7 +54,7 @@ public class EncounterController {
             PatientDTO patientDTO = response.getBody();
 
             // Create and save the Encounter object
-            Encounter encounter = new Encounter(encounterDate, encounterInfo, patientId);
+            Encounter encounter = new Encounter(encounterDate, encounterInfo, patientId, doctorId);
 
             // Save the Encounter object to the database
             encounterRepository.save(encounter);

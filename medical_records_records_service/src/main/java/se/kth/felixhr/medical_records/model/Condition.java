@@ -13,12 +13,14 @@ public class Condition  {
     private String condition_info;
     private Date condition_date;
     private Long patientId;
+    private Long doctorId;
 
-    public Condition(String condition_name, String condition_info, Date condition_date, Long patientId) {
+    public Condition(String condition_name, String condition_info, Date condition_date, Long patientId, Long doctorId) {
         this.condition_name = condition_name;
         this.condition_info = condition_info;
         this.condition_date = condition_date;
         this.patientId = patientId;
+        this.doctorId = doctorId;
     }
 
     public Condition() {
@@ -65,4 +67,8 @@ public class Condition  {
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
+
+    @Column(name = "doctor_id")
+    public Long getDoctorId(){ return doctorId; }
+    public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
 }
