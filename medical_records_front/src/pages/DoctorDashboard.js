@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import SearchBar from "../entities/SearchBar";
 
 export default function DoctorDashboard() {
 
@@ -19,6 +20,10 @@ export default function DoctorDashboard() {
   return (
     <div className='container'>
         <div className='py-4'>
+        <div>
+      <h1>Staff Dashboard</h1>
+      <SearchBar userRole="STAFF" />
+    </div>
             <table className="table">
                 <thead>
                     <tr>
