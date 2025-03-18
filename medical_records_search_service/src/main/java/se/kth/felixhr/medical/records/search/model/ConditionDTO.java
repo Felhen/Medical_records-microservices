@@ -8,13 +8,17 @@ public class ConditionDTO {
     public String conditionName;
     public String conditionInfo;
     public Date conditionDate;
+    public String firstName;
+    public String lastName;
 
-    public ConditionDTO(Long conditionId, Long patientId, String conditionName, String conditionInfo, Date conditionDate) {
+    public ConditionDTO(Long conditionId, Long patientId, String conditionName, String conditionInfo, Date conditionDate, String firstName, String lastName) {
         this.conditionId = conditionId;
         this.patientId = patientId;
         this.conditionName = conditionName;
         this.conditionInfo = conditionInfo;
         this.conditionDate = conditionDate;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }
 

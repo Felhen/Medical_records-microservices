@@ -22,9 +22,11 @@ const ImagesPage = () => {
 
   const handleUpload = async (event) => {
     const formData = new FormData();
-    formData.append("image", event.target.files[0]);
+    formData.append("file", event.target.files[0]);
     formData.append("patient_id", patientId);
     formData.append("doctor_id", userId);
+
+    console.log([...formData.entries()]); // Log form data fields
 
     const response = await fetch("http://localhost:5000/images/upload", {
       method: "POST",
@@ -33,7 +35,7 @@ const ImagesPage = () => {
 
     if (response.ok) {
       const newImage = await response.json();
-      setImages((prev) => [newImage.image, ...prev]); // Add new image to state
+      setImages((prev) => [newImage.image, ...prev]);
     }
   };
 

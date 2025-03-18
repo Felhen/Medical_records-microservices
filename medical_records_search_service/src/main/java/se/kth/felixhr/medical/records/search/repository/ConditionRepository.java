@@ -18,14 +18,20 @@ public class ConditionRepository {
     @Inject
     AgroalDataSource dataSource;
 
-    public Uni<List<ConditionDTO>> getConditionsByName(String conditionName) {
+    public Uni<List<ConditionDTO>> getPatientsByCondition(String conditionName) {
         return Uni.createFrom().completionStage(() -> CompletableFuture.supplyAsync(() -> {
             List<ConditionDTO> conditions = new ArrayList<>();
-            String sql = "SELECT * FROM t_condition WHERE condition_name = ?";
+            String sql = """
+                SELECT c.condition_id, c.condition_name, c.condition_info, c.condition_date, 
+                       p.patient_id, p.first_name, p.last_name 
+                FROM t_condition c
+                JOIN t_patient p ON c.patient_id = p.patient_id
+                WHERE c.condition_name LIKE ?
+            """;
 
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, conditionName);
+                stmt.setString(1, "%" + conditionName + "%");  // 🔹 Allows partial search
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
@@ -34,7 +40,9 @@ public class ConditionRepository {
                             rs.getLong("patient_id"),
                             rs.getString("condition_name"),
                             rs.getString("condition_info"),
-                            rs.getDate("condition_date")
+                            rs.getDate("condition_date"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name")
                     ));
                 }
             } catch (Exception e) {
@@ -43,4 +51,5 @@ public class ConditionRepository {
             return conditions;
         }));
     }
+
 }

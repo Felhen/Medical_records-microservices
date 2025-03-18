@@ -4,16 +4,12 @@ const multer = require("multer");
 const path = require("path");
 const ImageController = require("../controllers/ImageController");
 
-// Multer Configuration for File Uploads (Only Here)
+// Multer Configuration for File Uploads
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
-  },
-  filename: function (req, file, cb) {
-    // Create a unique filename (you can adjust this as needed)
-    cb(null, "edited_" + Date.now() + path.extname(file.originalname));
-  },
+  }
 });
 const upload = multer({ 
   storage: storage,

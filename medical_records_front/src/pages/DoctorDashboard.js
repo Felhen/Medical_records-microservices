@@ -21,8 +21,8 @@ export default function DoctorDashboard() {
     <div className='container'>
         <div className='py-4'>
         <div>
-      <h1>Staff Dashboard</h1>
-      <SearchBar userRole="STAFF" />
+      <h1>Doctor Dashboard</h1>
+      <SearchBar/>
     </div>
             <table className="table">
                 <thead>
@@ -61,9 +61,7 @@ export default function DoctorDashboard() {
                                     <Link to={`/add_condition/${patient.id}`} className='btn btn-primary mx-2'>Add</Link>
                                 </td>
                                 <td>
-                                    <Link to={`/images/${patient.id}`} className="btn btn-secondary mx-2">
-                                        Images
-                                    </Link>
+                                    <Link to={`/images/${patient.id}`} className="btn btn-secondary mx-2">Images</Link>
                                 </td>
                             </tr>
                         ))

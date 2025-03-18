@@ -32,36 +32,29 @@ public class SearchController {
     // Search patients by name
     @GET
     @Path("/patients")
-    public Uni<List<PatientDTO>> searchPatientsByName(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName) {
-        return patientRepository.getPatientsByName(firstName, lastName);
+    public Uni<List<PatientDTO>> searchPatientsByName(@QueryParam("name") String name) {
+        return patientRepository.getPatientsByName(name);
     }
 
     // Search patients by doctor
     @GET
     @Path("/patients/by-doctor")
-    public Uni<List<PatientDTO>> searchPatientsByDoctor(@QueryParam("doctorId") Long doctorId) {
-        return patientRepository.getPatientsByDoctorEncounters(doctorId);
+    public Uni<List<PatientDTO>> searchPatientsByDoctor(@QueryParam("doctorName") String doctorName) {
+        return patientRepository.getPatientsByDoctorName(doctorName);
     }
 
     // Search conditions by name
     @GET
     @Path("/conditions")
-    public Uni<List<ConditionDTO>> searchConditionsByName(@QueryParam("conditionName") String conditionName) {
-        return conditionRepository.getConditionsByName(conditionName);
-    }
-
-    // Search encounters by doctorID
-    @GET
-    @Path("/encounters")
-    public Uni<List<EncounterDTO>> searchEncounters(@QueryParam("doctorId") Long doctorId) {
-        return encounterRepository.getEncountersByDoctor(doctorId);
+    public Uni<List<ConditionDTO>> searchConditions(@QueryParam("conditionName") String conditionName) {
+        return conditionRepository.getPatientsByCondition(conditionName);
     }
 
     // Search encounters by DoctorId and date
     @GET
     @Path("/encounters/by-date")
-    public Uni<List<EncounterDTO>> searchEncountersByDoctorAndDate(@QueryParam("doctorId") Long doctorId, @QueryParam("date") String date) {
-        return encounterRepository.getEncountersByDoctorAndDate(doctorId, Date.valueOf(date));
+    public Uni<List<EncounterDTO>> searchEncountersByDoctorAndDate(@QueryParam("doctorName") String doctorName, @QueryParam("date") String date) {
+        return encounterRepository.getEncountersByDoctorAndDate(doctorName, Date.valueOf(date));
     }
 }
 
