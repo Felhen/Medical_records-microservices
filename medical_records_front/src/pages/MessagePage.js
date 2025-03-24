@@ -20,13 +20,12 @@ export default function MessagePage() {
             }
         };
 
-
         const fetchUserList = async () => {
             try {
                 const userResponse = await axios.get('http://localhost:8080/users');
                 setUsers(userResponse.data);
             } catch (error) {
-                console.error('Error fetching staff list:', error);
+                console.error('Error fetching user list:', error);
             }
         };
 
@@ -41,57 +40,65 @@ export default function MessagePage() {
     };
 
     return (
-        <div className='container'>
-            <div className='py-4'>
-                {loading ? (
-                    <p>Loading messages...</p>
-                ) : (
-                    <div>
-                        {userRole === 'PATIENT' && (
-                            <div>
-                                <h2>Doctors/Staff List</h2>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Username</th>
-                                            <th scope="col">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {users
-                                            .filter((user) => user.role !== 'PATIENT')
-                                            .map((user, index) => (
-                                                <tr key={user.id}>
-                                                    <th scope="row">{index + 1}</th>
-                                                    <td>{user.username}</td>
-                                                    <td>
-                                                        <Link to={`/messages/new_message/${user.id}`} className='btn btn-primary mx-2'>New Message</Link>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                    </tbody>
-                                </table>
+        <div className="container mt-4">
+            <div className="row">
+                {/* Sidebar for Doctor/Staff List */}
+                {userRole === 'PATIENT' && (
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-header bg-primary text-white">
+                                <h5 className="mb-0">Doctors & Staff</h5>
                             </div>
-                        )}
-                        {/* Display the user's messages */}
-                        <h2>Inbox</h2>
-                        {messages.map((message) => (
-                            <div key={message.id}>
-                                <p>From: {getSenderUsername(message.sender)}</p>
-                                <p>{message.content}</p>
-                                {/* Link to respond with the sender's ID as a parameter */}
-                                {userRole !== 'PATIENT' && (
-                                    <Link to={`/messages/new_message/${message.sender}`} className='btn btn-primary mx-2'>Respond</Link>
-                                )}
-                                <hr />
+                            <div className="card-body p-0">
+                                <ul className="list-group list-group-flush">
+                                    {users
+                                        .filter(user => user.role !== 'PATIENT')
+                                        .map(user => (
+                                            <li key={user.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                                {user.username}
+                                                <Link to={`/messages/new_message/${user.id}`} className="btn btn-sm btn-primary">
+                                                    Message
+                                                </Link>
+                                            </li>
+                                        ))}
+                                </ul>
                             </div>
-                        ))}
+                        </div>
                     </div>
                 )}
+
+                {/* Messages Inbox */}
+                <div className={`col ${userRole === 'PATIENT' ? 'col-md-8' : 'col-md-12'}`}>
+                    <div className="card">
+                        <div className="card-header bg-success text-white">
+                            <h5 className="mb-0">Inbox</h5>
+                        </div>
+                        <div className="card-body">
+                            {loading ? (
+                                <p>Loading messages...</p>
+                            ) : messages.length > 0 ? (
+                                <div className="list-group">
+                                    {messages.map(message => (
+                                        <div key={message.id} className="list-group-item">
+                                            <div className="d-flex w-100 justify-content-between">
+                                                <h6 className="mb-1">From: {getSenderUsername(message.sender)}</h6>
+                                                {userRole !== 'PATIENT' && (
+                                                    <Link to={`/messages/new_message/${message.sender}`} className="btn btn-sm btn-outline-primary">
+                                                        Respond
+                                                    </Link>
+                                                )}
+                                            </div>
+                                            <p className="mb-1">{message.content}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-muted">No messages found.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
-    
 }
-

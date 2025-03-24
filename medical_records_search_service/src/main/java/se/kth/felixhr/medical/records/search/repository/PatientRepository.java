@@ -22,7 +22,7 @@ public class PatientRepository {
     public Uni<List<PatientDTO>> getPatientsByName(String name) {
         return Uni.createFrom().completionStage(() -> CompletableFuture.supplyAsync(() -> {
             List<PatientDTO> patients = new ArrayList<>();
-
+            System.out.println(name);
             if (name == null || name.trim().length() < 2) {
                 return patients; // Return empty list if input is too short
             }

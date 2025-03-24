@@ -1,10 +1,12 @@
 import React from 'react';
 import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Navbar() {
 
   const { login, isLoggedIn, errorMessage, userRole, logout } = useAuth();
+  const navigate = useNavigate();
 
 
   const toggleDropdown = () => {
@@ -33,6 +35,11 @@ export default function Navbar() {
                }
             </ul>
           </div>
+            {isLoggedIn && (
+              <button className="btn btn-light ms-2" onClick={() => navigate('/messages')}>
+                Messages
+              </button>
+            )}
         </div>
       </nav>
     </div>

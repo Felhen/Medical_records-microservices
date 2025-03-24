@@ -1,5 +1,3 @@
-// PatientDashboard.js
-
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import axios from 'axios';
@@ -16,100 +14,109 @@ export default function PatientInfo() {
             try {
                 const response = await axios.get(`http://localhost:8080/patient/${patientId}`);
                 setPatient(response.data);
-                const responseCond = await axios.get(`http://localhost:8081/patient/${patientId}/conditions`)
+
+                const responseCond = await axios.get(`http://localhost:8081/patient/${patientId}/conditions`);
                 setConditions(responseCond.data);
-                const responseEnc = await axios.get(`http://localhost:8081/patient/${patientId}/encounters`)
+
+                const responseEnc = await axios.get(`http://localhost:8081/patient/${patientId}/encounters`);
                 setEncounters(responseEnc.data);
-                const responseObs = await axios.get(`http://localhost:8081/patient/${patientId}/observations`)
+
+                const responseObs = await axios.get(`http://localhost:8081/patient/${patientId}/observations`);
                 setObservations(responseObs.data);
             } catch (error) {
-                // Handle error fetching patient information
                 console.error('Error fetching patient information:', error);
             }
         };
 
-        if (patientId) {
-            fetchPatientInfo(); // Fetch patient information when the component mounts
-        }
+        if (patientId) fetchPatientInfo();
     }, [patientId]);
 
     return (
-        <div className='patInfo'>
-            <div className='py-4'>
-                {/* Display Patient Information */}
+        <div className="container my-4">
+            {/* Patient Information */}
+            <div className="card shadow-lg p-4 mb-4">
+                <h2 className="text-center">Patient Information</h2>
                 {patient ? (
-                    <div>
-                        <h2>Patient Information</h2>
-                        <p>First name: {patient.first_name}</p>
-                        <p>Last name: {patient.last_name}</p>
-                        <p>Date of Birth: {patient.birth_date}</p>
+                    <div className="card-body">
+                        <p><strong>First Name:</strong> {patient.first_name}</p>
+                        <p><strong>Last Name:</strong> {patient.last_name}</p>
+                        <p><strong>Date of Birth:</strong> {patient.birth_date}</p>
                     </div>
                 ) : (
-                    <p>Loading patient information...</p>
+                    <p className="text-center">Loading patient information...</p>
                 )}
-    
-                {/* Display Observations */}
-                <h2>Observations</h2>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Info</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {observations.map((observation, index) => (
-                            <tr key={index}>
-                                <td>{observation.observation_date}</td>
-                                <td>{observation.observation_info}</td>
+            </div>
+
+            {/* Observations */}
+            <div className="card shadow-lg p-4 mb-4">
+                <h2 className="text-center">Observations</h2>
+                {observations.length > 0 ? (
+                    <table className="table table-striped">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Info</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-    
-                {/* Display Encounters */}
-                <h2>Encounters</h2>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Info</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {encounters.map((encounter, index) => (
-                            <tr key={index}>
-                                <td>{encounter.encounter_date}</td>
-                                <td>{encounter.encounter_info}</td>
+                        </thead>
+                        <tbody>
+                            {observations.map((observation, index) => (
+                                <tr key={index}>
+                                    <td>{observation.observation_date}</td>
+                                    <td>{observation.observation_info}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : <p className="text-center">No observations found.</p>}
+            </div>
+
+            {/* Encounters */}
+            <div className="card shadow-lg p-4 mb-4">
+                <h2 className="text-center">Encounters</h2>
+                {encounters.length > 0 ? (
+                    <table className="table table-striped">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Info</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-    
-                {/* Display conditions */}
-                <h2>Conditions</h2>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Date</th>
-                            <th>Info</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {conditions.map((condition, index) => (
-                            <tr key={index}>
-                                <td>{condition.condition_name}</td>
-                                <td>{condition.condition_date}</td>
-                                <td>{condition.condition_info}</td>
+                        </thead>
+                        <tbody>
+                            {encounters.map((encounter, index) => (
+                                <tr key={index}>
+                                    <td>{encounter.encounter_date}</td>
+                                    <td>{encounter.encounter_info}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : <p className="text-center">No encounters found.</p>}
+            </div>
+
+            {/* Conditions */}
+            <div className="card shadow-lg p-4">
+                <h2 className="text-center">Conditions</h2>
+                {conditions.length > 0 ? (
+                    <table className="table table-striped">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Info</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {conditions.map((condition, index) => (
+                                <tr key={index}>
+                                    <td>{condition.condition_name}</td>
+                                    <td>{condition.condition_date}</td>
+                                    <td>{condition.condition_info}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : <p className="text-center">No conditions found.</p>}
             </div>
         </div>
     );
-    
 }
-

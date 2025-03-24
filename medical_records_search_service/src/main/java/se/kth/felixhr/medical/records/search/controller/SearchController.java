@@ -1,6 +1,8 @@
 package se.kth.felixhr.medical.records.search.controller;
 
+import io.quarkus.security.Authenticated;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -32,6 +34,7 @@ public class SearchController {
     // Search patients by name
     @GET
     @Path("/patients")
+    @RolesAllowed({"DOCTOR", "STAFF"})
     public Uni<List<PatientDTO>> searchPatientsByName(@QueryParam("name") String name) {
         return patientRepository.getPatientsByName(name);
     }
@@ -39,6 +42,7 @@ public class SearchController {
     // Search patients by doctor
     @GET
     @Path("/patients/by-doctor")
+    @RolesAllowed({"DOCTOR", "STAFF"})
     public Uni<List<PatientDTO>> searchPatientsByDoctor(@QueryParam("doctorName") String doctorName) {
         return patientRepository.getPatientsByDoctorName(doctorName);
     }
@@ -46,6 +50,7 @@ public class SearchController {
     // Search conditions by name
     @GET
     @Path("/conditions")
+    @RolesAllowed({"DOCTOR", "STAFF"})
     public Uni<List<ConditionDTO>> searchConditions(@QueryParam("conditionName") String conditionName) {
         return conditionRepository.getPatientsByCondition(conditionName);
     }
@@ -53,6 +58,7 @@ public class SearchController {
     // Search encounters by DoctorId and date
     @GET
     @Path("/encounters/by-date")
+    @RolesAllowed({"DOCTOR", "STAFF"})
     public Uni<List<EncounterDTO>> searchEncountersByDoctorAndDate(@QueryParam("doctorName") String doctorName, @QueryParam("date") String date) {
         return encounterRepository.getEncountersByDoctorAndDate(doctorName, Date.valueOf(date));
     }

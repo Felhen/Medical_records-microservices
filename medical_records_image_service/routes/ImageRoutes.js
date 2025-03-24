@@ -16,8 +16,13 @@ const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB limit
 });
 
-router.post("/upload", upload.single("file"), ImageController.uploadImage);
-router.post("/edit", upload.single("file"), ImageController.editImage);
-router.get("/:patientId", ImageController.getImagesByPatient);
 
-module.exports = router;
+module.exports = (keycloak) => {
+  const router = express.Router();
+
+  router.post("/upload", keycloak.protect(['DOCTOR', 'STAFF']), upload.single("file"), ImageController.uploadImage);
+  router.post("/edit", keycloak.protect(['DOCTOR', 'STAFF']), upload.single("file"), ImageController.editImage);
+  router.get("/:patientId", keycloak.protect(['DOCTOR', 'STAFF']), ImageController.getImagesByPatient);
+
+  return router;
+};
