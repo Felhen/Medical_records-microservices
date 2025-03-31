@@ -8,14 +8,16 @@ public class User {
 
     private Long id;
     private String username;
-    private String password;
+    private String email;
     private Role role;
     private Patient patient;
+    private String keycloakId;
 
-    public User(String username, String password, Role role) {
+    public User(String username, String email, Role role, String keycloakId) {
         this.username = username;
-        this.password = password;
+        this.email = email;
         this.role = role;
+        this.keycloakId = keycloakId;
     }
 
     public User() {
@@ -47,20 +49,20 @@ public class User {
         this.username = username;
     }
 
-    @Column(name = "pass")
-    public String getPassword() {
-        return password;
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
     }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setEmail(String email) {this.email = email;}
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role")
-    public Role getRole() {
-        return role;
-    }
+    public Role getRole() { return role; }
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Column(name = "keycloak_id" )
+    public String getKeycloakId() {return keycloakId;}
+    public void setKeycloakId(String keycloakId) {this.keycloakId = keycloakId; }
 }

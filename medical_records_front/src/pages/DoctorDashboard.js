@@ -26,7 +26,7 @@ export default function DoctorDashboard() {
             {/* Patients Table */}
             <div className="card shadow">
                 <div className="card-header bg-primary text-white">
-                    <h5 className="mb-0">Assigned Patients</h5>
+                    <h5 className="mb-0">All Patients</h5>
                 </div>
                 <div className="card-body p-0">
                     <table className="table table-hover mb-0">

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import securedAxios from "../keycloak/SecuredAxios";
 
 const ImageEditor = ({ imageUrl }) => {
   const { userId } = useAuth();
@@ -125,12 +126,18 @@ const ImageEditor = ({ imageUrl }) => {
       formData.append("patient_id", patientId);
       formData.append("doctor_id", userId);
     
-      const response = await fetch("http://localhost:5000/images/edit", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      alert(data.message);
+      try {
+        const response = await securedAxios('5000').post('/images/edit', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        alert(response.data.message);
+      } catch (error) {
+        console.error("Error saving edited image:", error);
+        alert("Failed to save image.");
+      }
     }, "image/jpeg", 0.5);
   };
 

@@ -20,21 +20,18 @@ import ImagesPage from "./pages/ImagesPage";
 
 
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { isLoggedIn, userRole } = useAuth();
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { isLoggedIn, userRole, initialized } = useAuth();
+
+  if (!initialized) return <div>Loading authentication...</div>;
+
+  if (!isLoggedIn) return <Navigate to="/login" />;
 
   if (!allowedRoles.includes(userRole)) {
-    if (userRole === 'PATIENT') {
-      return <Navigate to="/patient" />;
-    } else if (userRole === 'DOCTOR') {
-      return <Navigate to="/doctor" />;
-    } else if (userRole === 'STAFF') {
-      return <Navigate to="/staff" />;
-    }
+    if (userRole === 'PATIENT') return <Navigate to="/patient" />;
+    if (userRole === 'DOCTOR') return <Navigate to="/doctor" />;
+    if (userRole === 'STAFF') return <Navigate to="/staff" />;
   }
   return children;
 };

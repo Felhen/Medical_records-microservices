@@ -1,86 +1,56 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+// src/context/AuthProvider.js
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import securedAxios from '../keycloak/SecuredAxios';
 
-// Create a context to hold authentication state and functions
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
+  const { keycloak, initialized } = useKeycloak();
 
-    const initialLoggedInState = localStorage.getItem('isLoggedIn') === 'true';
-    const initialUserRole = localStorage.getItem('userRole') || '';
-    const initialUserId = localStorage.getItem('userId') || '';
-    const initialPatientId = localStorage.getItem('patientId') || '';
-  
-    const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedInState);
-    const [userRole, setUserRole] = useState(initialUserRole);
-    const [userId, setUserId] = useState(initialUserId); 
-    const [patientId, setPatientId] = useState(initialPatientId);
-    const [errorMessage, setErrorMessage] = useState('');
-  
-    const login = async (username, password) => {
+  const [userRole, setUserRole] = useState('');
+  const [userId, setUserId] = useState('');
+  const [patientId, setPatientId] = useState('');
+
+  const isLoggedIn = keycloak?.authenticated;
+
+  useEffect(() => {
+    const fetchBackendUser = async (keycloakId) => {
       try {
-        const response = await axios.post('http://localhost:8080/login', {
-          username: username,
-          pass: password,
-        });
+        const response = await securedAxios('8080').get(`/user/by-keycloak-id/${keycloakId}`);
+        const data = response.data;
   
-        console.log(response.data);
-        if (response.status === 200) {
-          const userIdFromResponse = response.data.match(/User ID: (\d+)/)[1]; // Extracting user ID
-          const role = response.data.match(/Role: ([^\s]+)/)[1]; // Extracting user role
-          const patientIdFromResponse = response.data.match(/Patient ID: (\d+)/)[1]; // Extracting patient ID
-          setPatientId(patientIdFromResponse); // Set patient ID in stat
-          setUserId(userIdFromResponse); // Set user ID in state
-          setUserRole(role);
-          setIsLoggedIn(true);
-          setErrorMessage('');
-  
-          // Update localStorage upon successful login
-          localStorage.setItem('isLoggedIn', 'true');
-          localStorage.setItem('userRole', role);
-          localStorage.setItem('userId', userIdFromResponse); 
-          localStorage.setItem('patientId', patientIdFromResponse);
-        }
+        setUserId(data.userId);
+        setUserRole(data.role);
+        if (data.patientId) setPatientId(data.patientId);
       } catch (error) {
-        setIsLoggedIn(false);
-        setUserRole('');
-        setErrorMessage('Invalid username or password');
+        console.error("Failed to fetch user from backend:", error);
       }
     };
   
-    const logout = () => {
-      setIsLoggedIn(false);
-      setUserRole('');
-      setUserId(''); 
-      setPatientId('');
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('userRole');
-      localStorage.removeItem('userId'); // Remove user ID from local storage on logout
-      localStorage.removeItem('patientId'); // Remove patient ID from local storage on logout
-    };
+    if (initialized && isLoggedIn && keycloak.tokenParsed) {
+      const keycloakId = keycloak.tokenParsed.sub;
+      fetchBackendUser(keycloakId);
+    }
+  }, [initialized, isLoggedIn, keycloak]);
   
-    useEffect(() => {
-      localStorage.setItem('isLoggedIn', isLoggedIn);
-      localStorage.setItem('userRole', userRole);
-      localStorage.setItem('userId', userId); // Update user ID in local storage
-    }, [isLoggedIn, userRole, userId]);
-  
-    const authContextValue = {
+
+  const login = () => keycloak?.login();
+  const logout = () => keycloak?.logout({ redirectUri: window.location.origin });
+
+  return (
+    <AuthContext.Provider value={{
       isLoggedIn,
       userRole,
       userId,
       patientId,
-      errorMessage,
       login,
       logout,
-    };
-  
-    return (
-      <AuthContext.Provider value={authContextValue}>
-        {children}
-      </AuthContext.Provider>
-    );
-  };
-  
+      initialized
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

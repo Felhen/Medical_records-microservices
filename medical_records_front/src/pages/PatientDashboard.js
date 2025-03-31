@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
-import axios from 'axios';
+import securedAxios from '../keycloak/SecuredAxios';
 
 export default function PatientInfo() {
     const { patientId } = useAuth();
@@ -12,16 +12,13 @@ export default function PatientInfo() {
     useEffect(() => {
         const fetchPatientInfo = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/patient/${patientId}`);
+                const response = await securedAxios('8080').get(`/patient/${patientId}`);
                 setPatient(response.data);
-
-                const responseCond = await axios.get(`http://localhost:8081/patient/${patientId}/conditions`);
+                const responseCond = await securedAxios('8081').get(`/patient/${patientId}/conditions`);
                 setConditions(responseCond.data);
-
-                const responseEnc = await axios.get(`http://localhost:8081/patient/${patientId}/encounters`);
+                const responseEnc = await securedAxios('8081').get(`/patient/${patientId}/encounters`);
                 setEncounters(responseEnc.data);
-
-                const responseObs = await axios.get(`http://localhost:8081/patient/${patientId}/observations`);
+                const responseObs = await securedAxios('8081').get(`/patient/${patientId}/observations`);
                 setObservations(responseObs.data);
             } catch (error) {
                 console.error('Error fetching patient information:', error);

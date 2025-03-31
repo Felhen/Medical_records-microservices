@@ -1,66 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
-const LoginForm = () => {
-  const { login, isLoggedIn, errorMessage, userRole } = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Use useNavigate hook for navigation
+const Login = () => {
+  const { isLoggedIn, userRole, login } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLoggedIn) {
-            
-        if (userRole === 'PATIENT') {
-        navigate('/patient');
-        } else if (userRole === 'DOCTOR') {
-        navigate('/doctor');
-        } else if (userRole === 'STAFF') {
-        navigate('/staff');
-        }
+      if (userRole === 'PATIENT') navigate('/patient');
+      else if (userRole === 'DOCTOR') navigate('/doctor');
+      else if (userRole === 'STAFF') navigate('/staff');
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, userRole, navigate]);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-        await login(username, password);
-    } catch (error) {
-      // Error handling might be handled in the context and updated in the state
-      console.error('Login error:', error);
-    }
+  const handleRegister = () => {
+    navigate('/register');
+   /*  const redirectUri = encodeURIComponent(window.location.origin);
+    window.location.href = `http://localhost:8180/realms/medical-records/protocol/openid-connect/registrations?client_id=medical_app&redirect_uri=${redirectUri}`; */
   };
 
-    return (
-        <div className="container">
-            <h2 className="text-center mb-3">Login</h2>
-            <form className="mx-auto" style={{ maxWidth: '300px' }} onSubmit={handleLogin}>
-                <div className="mb-3">
-                    <label htmlFor="InputUsername" className="form-label">Username</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="InputUsername"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="InputPassword" className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="InputPassword"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary mx-2">Login</button>
-                <Link to="/register" className="btn btn-primary">Register</Link>
-                {errorMessage && <p>{errorMessage}</p>}
-            </form>
-        </div>
-    );
+  return (
+    <div className="container text-center mt-5">
+      <h1 className="mb-3 text-primary">Welcome to the Medical Records Portal</h1>
+      <p className="mb-4 text-muted">Secure access for patients, doctors, and staff</p>
+      <div className="d-flex justify-content-center gap-3">
+        <button className="btn btn-primary btn-lg" onClick={login}>
+          Login with Keycloak
+        </button>
+        <button className="btn btn-success btn-lg" onClick={handleRegister}>
+          Register
+        </button>
+      </div>
+    </div>
+  );
 };
 
-export default LoginForm;
-
+export default Login;

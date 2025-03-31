@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import securedAxios from '../keycloak/SecuredAxios';
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../context/AuthProvider";
 
@@ -21,23 +21,21 @@ const AddCondition = () => {
 
     const handleConditionAddition = async () => {
         try {
-            const conditionDetails = {
-                date,
-                description,
-                name,
-                doctorId,
-            };
-
-            const response = await axios.post(`http://localhost:8081/${patientId}/add_condition`, conditionDetails);
-
-            console.log(response.data);
-            // Redirect or perform any necessary actions after successful condition addition
-            // ...
+          const conditionDetails = {
+            date,
+            description,
+            name,
+            doctorId,
+          };
+      
+          const response = await securedAxios('8081').post(`/${patientId}/add_condition`,conditionDetails);
+      
+          console.log(response.data);
         } catch (error) {
-            // Handle condition addition error
-            console.error('Condition addition failed:', error);
+          console.error("Condition addition failed:", error);
         }
-    };
+      };
+      
 
     return (
         <div className="container">

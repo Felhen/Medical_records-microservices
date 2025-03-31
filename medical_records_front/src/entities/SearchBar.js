@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import securedAxios from "../keycloak/SecuredAxios";
+
 
 const SearchBar = () => {
   const [searchType, setSearchType] = useState("patientsByName"); // Default search type
@@ -15,19 +16,19 @@ const SearchBar = () => {
     try {
       let response;
       if (searchType === "patientsByName") {
-        response = await axios.get(`http://localhost:8083/search/patients`, {
+        response = await securedAxios('8083').get("/search/patients", {
           params: { name: searchQuery.trim() }
         });
       } else if (searchType === "patientsByDoctor") {
-        response = await axios.get(`http://localhost:8083/search/patients/by-doctor`, {
+        response = await securedAxios('8083').get("/search/patients/by-doctor", {
           params: { doctorName: searchQuery.trim() }
         });
       } else if (searchType === "conditions") {
-        response = await axios.get(`http://localhost:8083/search/conditions`, {
+        response = await securedAxios('8083').get("/search/conditions", {
           params: { conditionName: searchQuery.trim() }
         });
       } else if (searchType === "encountersByDoctorAndDate") {
-        response = await axios.get(`http://localhost:8083/search/encounters/by-date`, {
+        response = await securedAxios('8083').get("/search/encounters/by-date", {
           params: { doctorName: searchQuery.trim(), date: searchDate },
         });
       }

@@ -26,7 +26,7 @@ public class LoginController {
 
         User user = userRepository.findByUsername(username);
 
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && user.getEmail().equals(password)) {
             String responseMessage = "Login successful for user: " + username + " Role: " + user.getRole() + " User ID: " + user.getId();
 
             // Check if the user is a patient

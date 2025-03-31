@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthProvider';
+import securedAxios from '../keycloak/SecuredAxios';
 
 export default function MessagePage() {
     const { userId, userRole } = useAuth();
@@ -12,7 +13,7 @@ export default function MessagePage() {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await axios.get(`http://localhost:8082/${userId}/inbox`);
+                const response = await securedAxios('8082').get(`/${userId}/inbox`);
                 setMessages(response.data);
                 setLoading(false);
             } catch (error) {

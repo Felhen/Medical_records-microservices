@@ -75,6 +75,7 @@ public class PatientRepository {
                 JOIN t_encounter e ON p.patient_id = e.patient_id
                 JOIN t_user u ON e.doctor_id = u.user_id
                 WHERE u.username LIKE ?
+                AND u.user_role = 'DOCTOR'
             """;
 
             try (Connection conn = dataSource.getConnection();

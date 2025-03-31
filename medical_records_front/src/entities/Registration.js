@@ -9,6 +9,7 @@ const Registration = () => {
     const [birthdate, setBirthdate] = useState('');
     const [personNumber, setPersonNumber] = useState('');
     const [role, setRole] = useState('');
+    const [email, setEmail] = useState('');
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -20,13 +21,14 @@ const Registration = () => {
             setLastName('');
             setBirthdate('');
             setPersonNumber('');
+            setEmail('');
         }
         setRole(value);
     };
 
     const handleRegistration = async () => {
         try {
-            let userData = { username, password, role };
+            let userData = { username, email, password, role };
     
             if (role === 'patient') {
                 userData = {
@@ -92,6 +94,17 @@ const Registration = () => {
             <div className="mb-3">
                 <label htmlFor="username">Username</label>
                 <input type="text" className="form-control" name="username" onChange={(e) => setUsername(e.target.value)} />
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="email">Email</label>
+                <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
             </div>
 
             <div className="mb-3">

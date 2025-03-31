@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import ImageEditor from "../entities/ImageEditor";
+import securedAxios from "../keycloak/SecuredAxios";
 
 const ImagesPage = () => {
   const { userId } = useAuth();
@@ -15,10 +16,13 @@ const ImagesPage = () => {
   }, []);
 
   const fetchImages = async () => {
-    const response = await fetch(`http://localhost:5000/images/${patientId}`);
-    const data = await response.json();
-    setImages(data.images || []);
-  };
+    try {
+      const response = await securedAxios('5000').get(`/images/${patientId}`);
+      setImages(response.data.images || []);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };  
 
   const handleUpload = async (event) => {
     const formData = new FormData();
@@ -28,14 +32,15 @@ const ImagesPage = () => {
 
     console.log([...formData.entries()]); // Log form data fields
 
-    const response = await fetch("http://localhost:5000/images/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (response.ok) {
-      const newImage = await response.json();
-      setImages((prev) => [newImage.image, ...prev]);
+    try {
+      const response = await securedAxios('5000').post('/images/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setImages((prev) => [response.data.image, ...prev]);
+    } catch (error) {
+      console.error("Upload failed:", error);
     }
   };
 

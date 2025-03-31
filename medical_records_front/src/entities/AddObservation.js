@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import securedAxios from '../keycloak/SecuredAxios';
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../context/AuthProvider";
 
@@ -17,22 +17,19 @@ const AddObservation = () => {
 
     const handleObservationAddition = async () => {
         try {
-            const observationDetails = {
-                date,
-                description,
-                doctorId,
-            };
-
-            const response = await axios.post(`http://localhost:8081/${patientId}/add_observation`, observationDetails);
-
-            console.log(response.data);
-            // Redirect or perform any necessary actions after successful observation addition
-            // ...
+          const observationDetails = {
+            date,
+            description,
+            doctorId,
+          };
+      
+          const response = await securedAxios('8081').post(`/${patientId}/add_observation`,observationDetails);
+          console.log(response.data)
         } catch (error) {
-            // Handle observation addition error
-            console.error('Observation addition failed:', error);
+          console.error("Observation addition failed:", error);
         }
-    };
+      };
+      
 
     return (
         <div className="container">

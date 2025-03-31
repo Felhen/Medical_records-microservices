@@ -10,6 +10,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+import java.util.List;
 
 
 import java.util.Collection;
@@ -23,11 +27,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/patient/**").hasAnyRole("DOCTOR", "STAFF", "PATIENT")
-                        .requestMatchers("/**/add_condition").hasAnyRole("DOCTOR", "STAFF")
-                        .requestMatchers("/**/add_encounter").hasAnyRole("DOCTOR", "STAFF")
-                        .requestMatchers("/**/add_observation").hasAnyRole("DOCTOR", "STAFF")
+                        .requestMatchers("/{patientId}/add_condition").hasAnyRole("DOCTOR", "STAFF")
+                        .requestMatchers("/{patientId}/add_encounter").hasAnyRole("DOCTOR", "STAFF")
+                        .requestMatchers("/{patientId}/add_observation").hasAnyRole("DOCTOR", "STAFF")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -51,5 +56,18 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
         return jwtAuthenticationConverter;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true); // if using cookies or auth headers
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

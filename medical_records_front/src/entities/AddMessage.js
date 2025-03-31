@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import securedAxios from '../keycloak/SecuredAxios';
 import { useAuth } from '../context/AuthProvider';
 import { useParams } from 'react-router-dom';
 
@@ -10,25 +10,25 @@ export function SendMessagePage() {
 
   const handleSendMessage = async (e) => {
     e.preventDefault(); // Prevent default form submission
-
+  
     try {
       const messageData = {
         sender: userId,
         receiver: receiverId,
         content,
       };
-
+  
       console.log(messageData);
-
-      const response = await axios.post(`http://localhost:8082/send_message`, messageData);
-
+  
+      const response = await securedAxios('8082').post('/send_message', messageData);
+  
       console.log(response.data);
-
       setContent("");
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
     }
   };
+  
 
   return (
     <div className="container mt-4">

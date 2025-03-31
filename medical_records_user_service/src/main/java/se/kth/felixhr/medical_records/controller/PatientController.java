@@ -27,7 +27,7 @@ public class PatientController {
         return patientRepository.findAll();
     }
 
-    @GetMapping("/patient/{id}") // Endpoint to get a specific patient by ID
+    @GetMapping("/patient/{id}")
     ResponseEntity<Patient> getPatientById(@PathVariable Long id){
         Optional<Patient> patient = patientRepository.findById(id);
         return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

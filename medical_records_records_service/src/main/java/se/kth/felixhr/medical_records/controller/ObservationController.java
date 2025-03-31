@@ -59,7 +59,7 @@ public class ObservationController {
             // Save the Encounter object to the database
             observationRepository.save(observation);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Encounter added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Observation added successfully");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");
         }
