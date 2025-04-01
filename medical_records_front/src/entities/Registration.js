@@ -40,7 +40,7 @@ const Registration = () => {
                 };
             }
     
-            const response = await axios.post('http://localhost:8080/register', userData);
+            const response = await axios.post('http://localhost:8084/register', userData);
     
             console.log(response.data);
             // Redirect or perform any necessary actions after successful registration

@@ -16,8 +16,6 @@ const Login = () => {
 
   const handleRegister = () => {
     navigate('/register');
-   /*  const redirectUri = encodeURIComponent(window.location.origin);
-    window.location.href = `http://localhost:8180/realms/medical-records/protocol/openid-connect/registrations?client_id=medical_app&redirect_uri=${redirectUri}`; */
   };
 
   return (

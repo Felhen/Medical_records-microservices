@@ -12,7 +12,7 @@ export default function PatientInfo() {
     useEffect(() => {
         const fetchPatientInfo = async () => {
             try {
-                const response = await securedAxios('8080').get(`/patient/${patientId}`);
+                const response = await securedAxios('8084').get(`/patient/${patientId}`);
                 setPatient(response.data);
                 const responseCond = await securedAxios('8081').get(`/patient/${patientId}/conditions`);
                 setConditions(responseCond.data);

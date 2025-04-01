@@ -1,5 +1,4 @@
 services:
-
   mysql:
     image: mysql:8.0
     restart: always
@@ -13,6 +12,10 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - medical_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      retries: 10
 
   user_service:
     build:
@@ -20,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: user_service
     ports:
-      - "8080:8080"
+      - "8084:8084"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
@@ -61,7 +64,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      PATIENT_SERVICE_URL: http://user_service:8080
     depends_on:
       - mysql
       - user_service

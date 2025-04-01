@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchBackendUser = async (keycloakId) => {
       try {
-        const response = await securedAxios('8080').get(`/user/by-keycloak-id/${keycloakId}`);
+        const response = await securedAxios('8084').get(`/user/by-keycloak-id/${keycloakId}`);
         const data = response.data;
   
         setUserId(data.userId);

@@ -11,7 +11,7 @@ export default function DoctorDashboard() {
     }, []);
 
     const loadPatients = async () => {
-        const result = await axios.get("http://localhost:8080/patients");
+        const result = await axios.get("http://localhost:8084/patients");
         setPatients(result.data);
     };
 

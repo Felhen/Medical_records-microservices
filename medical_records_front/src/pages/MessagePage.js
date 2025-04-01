@@ -23,7 +23,7 @@ export default function MessagePage() {
 
         const fetchUserList = async () => {
             try {
-                const userResponse = await axios.get('http://localhost:8080/users');
+                const userResponse = await axios.get('http://localhost:8084/users');
                 setUsers(userResponse.data);
             } catch (error) {
                 console.error('Error fetching user list:', error);
