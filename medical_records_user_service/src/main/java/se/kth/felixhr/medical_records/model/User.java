@@ -41,7 +41,7 @@ public class User {
         this.patient = patient;
     }
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false, unique = true)
     public String getUsername() {
         return username;
     }
@@ -49,20 +49,20 @@ public class User {
         this.username = username;
     }
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     public String getEmail() {
         return email;
     }
     public void setEmail(String email) {this.email = email;}
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_role")
+    @Column(name = "user_role", nullable = false)
     public Role getRole() { return role; }
     public void setRole(Role role) {
         this.role = role;
     }
 
-    @Column(name = "keycloak_id" )
+    @Column(name = "keycloak_id", nullable = false, unique = true)
     public String getKeycloakId() {return keycloakId;}
     public void setKeycloakId(String keycloakId) {this.keycloakId = keycloakId; }
 }

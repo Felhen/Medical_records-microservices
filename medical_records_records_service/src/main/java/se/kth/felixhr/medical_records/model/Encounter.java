@@ -36,7 +36,7 @@ public class Encounter {
         this.id = id;
     }
 
-    @Column(name = "encounter_date")
+    @Column(name = "encounter_date", nullable = false)
     public Date getEncounter_date() {
         return encounter_date;
     }
@@ -44,7 +44,7 @@ public class Encounter {
         this.encounter_date = encounter_date;
     }
 
-    @Column(name = "encounter_info")
+    @Column(name = "encounter_info", nullable = false)
     public String getEncounter_info() {
         return encounter_info;
     }
@@ -52,7 +52,7 @@ public class Encounter {
         this.encounter_info = encounter_info;
     }
 
-    @Column(name = "patient_id")
+    @Column(name = "patient_id", nullable = false)
     public Long getPatientId() {
         return patientId;
     }
@@ -60,15 +60,8 @@ public class Encounter {
         this.patientId = patientId;
     }
 
-    @Column(name = "doctor_id")
+    @Column(name = "doctor_id", nullable = false)
     public Long getDoctorId(){ return doctorId; }
     public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
 
-
-/*@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }*/
 }

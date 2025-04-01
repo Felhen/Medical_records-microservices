@@ -34,7 +34,7 @@ public class Observation {
         this.id = id;
     }
 
-    @Column(name = "observation_date")
+    @Column(name = "observation_date", nullable = false)
     public Date getObservation_date() {
         return observation_date;
     }
@@ -42,7 +42,7 @@ public class Observation {
         this.observation_date = observation_date;
     }
 
-    @Column(name = "observation_info")
+    @Column(name = "observation_info", nullable = false)
     public String getObservation_info() {
         return observation_info;
     }
@@ -50,7 +50,7 @@ public class Observation {
         this.observation_info = observation_info;
     }
 
-   @Column(name = "patient_id")
+   @Column(name = "patient_id", nullable = false)
     public Long getPatientId() {
         return patientId;
     }
@@ -58,7 +58,7 @@ public class Observation {
         this.patientId = patientId;
     }
 
-    @Column(name = "doctor_id")
+    @Column(name = "doctor_id", nullable = false)
     public Long getDoctorId(){ return doctorId; }
     public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
 }

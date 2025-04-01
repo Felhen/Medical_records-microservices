@@ -1,13 +1,45 @@
-class Image {
-    constructor(image_id, patient_id, doctor_id, filename, path, uploaded_at) {
-      this.image_id = image_id;
-      this.patient_id = patient_id;
-      this.doctor_id = doctor_id;
-      this.filename = filename;
-      this.path = path;
-      this.uploaded_at = uploaded_at;
-    }
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+
+const Image = sequelize.define('Image', {
+  image_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  patient_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 't_patient', // table name
+      key: 'patient_id'
+    },
+    onDelete: 'CASCADE'
+  },
+  doctor_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 't_user',
+      key: 'user_id'
+    },
+    onDelete: 'CASCADE'
+  },
+  filename: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  path: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  uploaded_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
-  
-  module.exports = Image;
-  
+}, {
+  tableName: 't_image',
+  timestamps: false
+});
+
+module.exports = Image;

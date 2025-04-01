@@ -1,4 +1,11 @@
 const cors = require("cors");
+const sequelize = require('./config/db'); // Make sure this points to your Sequelize instance
+
+// Connect to DB and sync the Image model
+sequelize.sync()
+  .then(() => console.log("Database synced"))
+  .catch(err => console.error("Sequelize sync error:", err));
+
 
 require("dotenv").config();
 const express = require("express");

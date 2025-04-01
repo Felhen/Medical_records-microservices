@@ -1,23 +1,20 @@
-# Use an appropriate base image with Node.js installed
-FROM node:14-alpine
+# Use Node.js base image
+FROM node:18-alpine
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the React app files to the container
+# Copy the entire frontend codebase
 COPY . .
 
-# Build the React app (change 'npm run build' to your actual build command)
-RUN npm run build
-
-# Expose the port used by the React app (if applicable)
+# Expose React dev server port
 EXPOSE 3000
 
-# Command to start the React app (if serving via Node.js server)
+# Start React app in dev mode (adjust if needed)
 CMD ["npm", "start"]

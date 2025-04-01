@@ -36,7 +36,7 @@ public class Condition  {
         this.id = id;
     }
 
-    @Column(name= "condition_name")
+    @Column(name= "condition_name", nullable = false)
     public String getCondition_name() {
         return condition_name;
     }
@@ -44,7 +44,7 @@ public class Condition  {
         this.condition_name = condition_name;
     }
 
-    @Column(name= "condition_info")
+    @Column(name= "condition_info", nullable = false)
     public String getCondition_info() {
         return condition_info;
     }
@@ -52,7 +52,7 @@ public class Condition  {
         this.condition_info = condition_info;
     }
 
-    @Column(name= "condition_date")
+    @Column(name= "condition_date", nullable = false)
     public Date getCondition_date() {
         return condition_date;
     }
@@ -60,7 +60,7 @@ public class Condition  {
         this.condition_date = condition_date;
     }
 
-    @Column(name = "patient_id")
+    @Column(name = "patient_id", nullable = false)
     public Long getPatientId() {
         return patientId;
     }
@@ -68,7 +68,7 @@ public class Condition  {
         this.patientId = patientId;
     }
 
-    @Column(name = "doctor_id")
+    @Column(name = "doctor_id", nullable = false)
     public Long getDoctorId(){ return doctorId; }
     public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
 }

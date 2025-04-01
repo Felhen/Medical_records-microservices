@@ -30,7 +30,7 @@ public class Message {
         this.id = id;
     }
 
-    @Column(name = "sender_id")
+    @Column(name = "sender_id", nullable = false)
     public Long getSender() {
         return sender;
     }
@@ -38,7 +38,7 @@ public class Message {
         this.sender = sender;
     }
 
-    @Column(name = "receiver_id")
+    @Column(name = "receiver_id", nullable = false)
     public Long getReceiver() {
         return receiver;
     }
@@ -46,7 +46,7 @@ public class Message {
         this.receiver = receiver;
     }
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     public String getContent() {
         return content;
     }

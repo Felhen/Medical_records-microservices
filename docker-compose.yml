@@ -1,94 +1,116 @@
-version: '3.8'
-
 services:
-  mysql-medical_records:
-    container_name: mysql-Medical_records
-    image: mysql
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql
     environment:
-      - MYSQL_DATABASE=medical_records
-      - MYSQL_ROOT_PASSWORD=1234567
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - medical_network
 
-  springboot-medical_records:
-    container_name: springboot-Medical_records
+  user_service:
     build:
-      context: ./medical_records
+      context: ./medical_records_user_service
       dockerfile: Dockerfile
+    container_name: user_service
     ports:
       - "8080:8080"
     environment:
-       - spring.datasource.url=jdbc:mysql://mysql-medical_records:3306/medical_records
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: medical-records
+      KEYCLOAK_RESOURCE: medical_app_reg
+      KEYCLOAK_CREDENTIALS_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     depends_on:
-      - mysql-medical_records
-    restart: on-failure
-    
+      - mysql
+    networks:
+      - medical_network
 
-  react-medical_records:
-    container_name: react-Medical_records
+  message_service:
+    build:
+      context: ./medical_records_message_service
+      dockerfile: Dockerfile
+    container_name: message_service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - medical_network
+
+  records_service:
+    build:
+      context: ./medical_records_records_service
+      dockerfile: Dockerfile
+    container_name: records_service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PATIENT_SERVICE_URL: http://user_service:8080
+    depends_on:
+      - mysql
+      - user_service
+    networks:
+      - medical_network
+
+  search_service:
+    build:
+      context: ./medical_records_search_service
+      dockerfile: Dockerfile
+    container_name: search_service
+    ports:
+      - "8083:8083"
+    environment:
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+      QUARKUS_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
+      QUARKUS_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/medical-records
+      QUARKUS_OIDC_CLIENT_ID: medical_app
+      QUARKUS_OIDC_CREDENTIALS_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+    depends_on:
+      - mysql
+    networks:
+      - medical_network
+
+  image_service:
+    build:
+      context: ./medical_records_image_service
+      dockerfile: Dockerfile
+    container_name: image_service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    networks:
+      - medical_network
+
+  frontend:
     build:
       context: ./medical_records_front
       dockerfile: Dockerfile
+    container_name: frontend
     ports:
       - "3000:3000"
-    depends_on:
-      - springboot-medical_records
+    networks:
+      - medical_network
 
 volumes:
   mysql-data:
 
-
-
-# services:
-#   medical_records:
-#     build: medical_records
-#     restart: always
-#     environment:
-#       MYSQL_HOST: db
-#     networks:
-#       - react-spring
-#       - spring-mysql
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     # We use a mariadb image which supports both amd64 & arm64 architecture
-#     image: mariadb:10.6.4-focal
-#     # If you really want to use MySQL, uncomment the following line
-#     #image: mysql:8.0.19
-#     environment:
-#       - MYSQL_DATABASE=medical_records
-#       - MYSQL_ROOT_PASSWORD=1234567
-#     restart: always
-#     healthcheck:
-#       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
-#       interval: 3s
-#       retries: 5
-#       start_period: 30s
-#     volumes:
-#       - db-data:/var/lib/mysql
-#     networks:
-#       - spring-mysql
-#   medical_records_front:
-#     build:
-#       context: medical_records_front
-#       target: development
-#     ports:
-#       - 3000:3000
-#     volumes:
-#       - ./frontend/src:/code/src
-#       - /project/node_modules
-#     networks:
-#       - react-spring
-#     depends_on:
-#       - medical_records
-#     expose:
-#       - 3306
-#       - 33060
-# volumes:
-#   db-data: {}
-# networks:
-#   react-spring: {}
-#   spring-mysql: {}
+networks:
+  medical_network:

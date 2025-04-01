@@ -38,7 +38,7 @@ public class Patient  {
         this.id = id;
     }
 
-    @Column(name= "first_name")
+    @Column(name= "first_name", nullable = false)
     public String getFirst_name() {
         return first_name;
     }
@@ -46,7 +46,7 @@ public class Patient  {
         this.first_name = first_name;
     }
 
-    @Column(name= "last_name")
+    @Column(name= "last_name", nullable = false)
     public String getLast_name() {
         return last_name;
     }
@@ -54,7 +54,7 @@ public class Patient  {
         this.last_name = last_name;
     }
 
-    @Column(name= "birth_date")
+    @Column(name= "birth_date", nullable = false, unique = true)
     public Date getBirth_date() {
         return birth_date;
     }
@@ -62,7 +62,7 @@ public class Patient  {
         this.birth_date = birth_date;
     }
 
-    @Column(name= "person_number", unique = true)
+    @Column(name= "person_number", nullable = false, unique = true)
     public int getPerson_number() {
         return person_number;
     }
@@ -72,7 +72,7 @@ public class Patient  {
 
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     @JsonIgnore
     public User getUser() {
         return user;
