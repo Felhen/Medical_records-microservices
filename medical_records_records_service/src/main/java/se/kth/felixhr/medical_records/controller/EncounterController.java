@@ -47,11 +47,14 @@ public class EncounterController {
         Date encounterDate = Date.valueOf(encounterDateStr);
 
         // Fetch the patient by ID
+        System.out.println("Calling User Service at: " + patientServiceUrl + "/patient/" + patientId);
+
         String url = patientServiceUrl + "/patient/" + patientId;
         ResponseEntity<PatientDTO> response = restTemplate.getForEntity(url, PatientDTO.class);
 
+        System.out.println("User service raw response: " + response.getBody());
+
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            PatientDTO patientDTO = response.getBody();
 
             // Create and save the Encounter object
             Encounter encounter = new Encounter(encounterDate, encounterInfo, patientId, doctorId);

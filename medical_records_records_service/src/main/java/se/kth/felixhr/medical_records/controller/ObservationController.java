@@ -52,7 +52,6 @@ public class ObservationController {
         ResponseEntity<PatientDTO> response = restTemplate.getForEntity(url, PatientDTO.class);
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            PatientDTO patientDTO = response.getBody();
 
             Observation observation = new Observation(observationDate, observationInfo, patientId, doctorId);
 

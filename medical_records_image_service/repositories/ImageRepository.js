@@ -1,36 +1,35 @@
-const pool = require("../config/db");
 const Image = require("../models/ImageModel");
 
 class ImageRepository {
   static async getImagesByPatient(patientId) {
-    const [rows] = await pool.execute(
-      "SELECT * FROM t_image WHERE patient_id = ? ORDER BY uploaded_at DESC",
-      [patientId]
-    );
+    const images = await Image.findAll({
+      where: { patient_id: parseInt(patientId, 10) },
+      order: [['uploaded_at', 'DESC']],
+    });
 
-    return rows.map(
-      (row) => new Image(row.image_id, row.patient_id, row.doctor_id, row.filename, row.path, row.uploaded_at)
-    );
+    return images;
   }
 
   static async uploadImage(filename, patient_id, doctor_id) {
     const filePath = `/uploads/${filename}`;
 
-    const [result] = await pool.execute(
-      "INSERT INTO t_image (patient_id, doctor_id, filename, path) VALUES (?, ?, ?, ?)",
-      [patient_id, doctor_id, filename, filePath]
-    );
+    const image = await Image.create({
+      patient_id: parseInt(patient_id, 10),
+      doctor_id: parseInt(doctor_id, 10),
+      filename,
+      path: filePath,
+    });
 
-    return new Image(result.insertId, patient_id, doctor_id, filename, filePath, new Date());
+    return image;
   }
 
   static async updateImagePath(oldPath, newPath) {
-    const [result] = await pool.execute(
-      "UPDATE t_image SET path = ? WHERE path = ?",
-      [newPath, oldPath]
+    const [affectedRows] = await Image.update(
+      { path: newPath },
+      { where: { path: oldPath } }
     );
 
-    if (result.affectedRows === 0) {
+    if (affectedRows === 0) {
       throw new Error("No image was updated. Make sure the old path exists.");
     }
 
@@ -39,5 +38,3 @@ class ImageRepository {
 }
 
 module.exports = ImageRepository;
-
-

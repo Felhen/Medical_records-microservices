@@ -132,8 +132,8 @@ export default function PatientInfo() {
                     <tbody>
                       {conditions.map((condition, index) => (
                         <tr key={index}>
-                          <td>{condition.condition_date}</td>
                           <td>{condition.condition_name}</td>
+                          <td>{condition.condition_date}</td>
                           <td>{condition.condition_info}</td>
                         </tr>
                       ))}

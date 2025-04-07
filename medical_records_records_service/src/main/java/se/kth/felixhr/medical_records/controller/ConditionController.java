@@ -52,7 +52,6 @@ public class ConditionController {
         ResponseEntity<PatientDTO> response = restTemplate.getForEntity(url, PatientDTO.class);
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            PatientDTO patientDTO = response.getBody();
 
             Condition condition = new Condition(conditionName,  conditionInfo, conditionDate, patientId, doctorId);
 

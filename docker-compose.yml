@@ -12,12 +12,8 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - medical_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
-      interval: 10s
-      retries: 10
 
-  user_service:
+  user-service:
     build:
       context: ./medical_records_user_service
       dockerfile: Dockerfile
@@ -28,7 +24,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_AUTH_SERVER_URL: http://host.docker.internal:8080
       KEYCLOAK_REALM: medical-records
       KEYCLOAK_RESOURCE: medical_app_reg
       KEYCLOAK_CREDENTIALS_SECRET: ${KEYCLOAK_CLIENT_SECRET}
@@ -37,7 +33,7 @@ services:
     networks:
       - medical_network
 
-  message_service:
+  message-service:
     build:
       context: ./medical_records_message_service
       dockerfile: Dockerfile
@@ -53,7 +49,7 @@ services:
     networks:
       - medical_network
 
-  records_service:
+  records-service:
     build:
       context: ./medical_records_records_service
       dockerfile: Dockerfile
@@ -66,11 +62,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       - mysql
-      - user_service
+      - user-service
     networks:
       - medical_network
 
-  search_service:
+  search-service:
     build:
       context: ./medical_records_search_service
       dockerfile: Dockerfile
@@ -81,7 +77,7 @@ services:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
       QUARKUS_DATASOURCE_USERNAME: ${MYSQL_ROOT_USERNAME}
       QUARKUS_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/medical-records
+      QUARKUS_OIDC_AUTH_SERVER_URL: http://host.docker.internal:8080/realms/medical-records
       QUARKUS_OIDC_CLIENT_ID: medical_app
       QUARKUS_OIDC_CREDENTIALS_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     depends_on:
@@ -89,7 +85,7 @@ services:
     networks:
       - medical_network
 
-  image_service:
+  image-service:
     build:
       context: ./medical_records_image_service
       dockerfile: Dockerfile

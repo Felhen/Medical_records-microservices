@@ -3,12 +3,12 @@ const sequelize = require('../config/db');
 
 const Image = sequelize.define('Image', {
   image_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true
   },
   patient_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     allowNull: false,
     references: {
       model: 't_patient', // table name
@@ -17,7 +17,7 @@ const Image = sequelize.define('Image', {
     onDelete: 'CASCADE'
   },
   doctor_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     allowNull: false,
     references: {
       model: 't_user',

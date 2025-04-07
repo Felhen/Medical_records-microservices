@@ -1,9 +1,0 @@
-{
-    "realm": "medical-records",
-    "auth-server-url": "http://localhost:8080",
-    "ssl-required": "none",
-    "resource": "medical_app",
-    "public-client": true,
-    "confidential-port": 0
-  }
-  
