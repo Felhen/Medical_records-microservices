@@ -23,10 +23,10 @@ public class EncounterController {
     private EncounterRepository encounterRepository;
 
     @Autowired
-    private RestTemplate restTemplate; // for making HTTP calls to patient service
+    private RestTemplate restTemplate;
 
     @Value("${patient.service.url}")
-    private String patientServiceUrl;
+    public String patientServiceUrl;
 
    @GetMapping("/patient/{patientId}/encounters")
     ResponseEntity<List<Encounter>> getEncountersByPatientId(@PathVariable Long patientId){
@@ -37,31 +37,34 @@ public class EncounterController {
     @Transactional
     @PostMapping("/{patientId}/add_encounter")
     public ResponseEntity<String> addEncounter(@PathVariable Long patientId, @RequestBody Map<String, Object> encounterData) {
+        if (encounterData.get("description") == null ||
+                encounterData.get("date") == null ||
+                encounterData.get("doctorId") == null) {
+            return ResponseEntity.badRequest().body("Missing required field(s)");
+        }
         String encounterDateStr = (String) encounterData.get("date");
         String encounterInfo = (String) encounterData.get("description");
 
-        // Parse doctorId string into long
-        Long doctorId =  Long.valueOf(encounterData.get("doctorId").toString());
+        Long doctorId;
+        try {
+            doctorId = Long.valueOf(encounterData.get("doctorId").toString());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid doctorId");
+        }
 
-        // Parse encounter_date string into a Date object
-        Date encounterDate = Date.valueOf(encounterDateStr);
-
-        // Fetch the patient by ID
-        System.out.println("Calling User Service at: " + patientServiceUrl + "/patient/" + patientId);
+        Date encounterDate;
+        try {
+            encounterDate = Date.valueOf(encounterDateStr);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid date format");
+        }
 
         String url = patientServiceUrl + "/patient/" + patientId;
         ResponseEntity<PatientDTO> response = restTemplate.getForEntity(url, PatientDTO.class);
 
-        System.out.println("User service raw response: " + response.getBody());
-
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-
-            // Create and save the Encounter object
             Encounter encounter = new Encounter(encounterDate, encounterInfo, patientId, doctorId);
-
-            // Save the Encounter object to the database
             encounterRepository.save(encounter);
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Encounter added successfully");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");

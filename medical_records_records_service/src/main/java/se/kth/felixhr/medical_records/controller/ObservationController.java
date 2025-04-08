@@ -24,10 +24,10 @@ public class ObservationController {
     private ObservationRepository observationRepository;
 
     @Autowired
-    private RestTemplate restTemplate; // for making HTTP calls to patient service
+    private RestTemplate restTemplate;
 
     @Value("${patient.service.url}")
-    private String patientServiceUrl;
+    public String patientServiceUrl;
 
     @GetMapping("/patient/{patientId}/observations")
     ResponseEntity<List<Observation>> getObservationsByPatientId(@PathVariable Long patientId){
@@ -38,26 +38,34 @@ public class ObservationController {
     @Transactional
     @PostMapping("/{patientId}/add_observation")
     public ResponseEntity<String> addObservation(@PathVariable Long patientId, @RequestBody Map<String, Object> observationData) {
+        if (observationData.get("description") == null ||
+                observationData.get("date") == null ||
+                observationData.get("doctorId") == null) {
+            return ResponseEntity.badRequest().body("Missing required field(s)");
+        }
         String observationDateStr = (String) observationData.get("date");
         String observationInfo = (String) observationData.get("description");
 
-        // Parse doctorId string into long
-        Long doctorId =  Long.valueOf(observationData.get("doctorId").toString());
+        Long doctorId;
+        try {
+            doctorId = Long.valueOf(observationData.get("doctorId").toString());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid doctorId");
+        }
 
-        // Parse encounter_date string into a Date object
-        Date observationDate = Date.valueOf(observationDateStr);
+        Date observationDate;
+        try {
+            observationDate = Date.valueOf(observationDateStr);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid date format");
+        }
 
-        // Fetch the patient by ID
         String url = patientServiceUrl + "/patient/" + patientId;
         ResponseEntity<PatientDTO> response = restTemplate.getForEntity(url, PatientDTO.class);
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-
             Observation observation = new Observation(observationDate, observationInfo, patientId, doctorId);
-
-            // Save the Encounter object to the database
             observationRepository.save(observation);
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Observation added successfully");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");

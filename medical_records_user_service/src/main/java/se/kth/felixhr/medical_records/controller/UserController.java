@@ -32,8 +32,6 @@ public class UserController {
 
     @GetMapping("/user/by-keycloak-id/{keycloakId}")
     public ResponseEntity<Map<String, Object>> getUserByKeycloakId(@PathVariable String keycloakId) {
-        System.out.println("Looking for keycloakId: " + keycloakId);
-
         User user = userRepository.findByKeycloakId(keycloakId);
         if (user == null) {
             return ResponseEntity.notFound().build();

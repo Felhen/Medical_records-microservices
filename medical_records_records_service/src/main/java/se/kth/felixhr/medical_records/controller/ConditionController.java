@@ -23,10 +23,10 @@ public class ConditionController {
     private ConditionRepository conditionRepository;
 
     @Autowired
-    private RestTemplate restTemplate; // for making HTTP calls to patient service
+    private RestTemplate restTemplate;
 
     @Value("${patient.service.url}")
-    private String patientServiceUrl;
+    public String patientServiceUrl;
 
     @GetMapping("/patient/{patient_id}/conditions")
     ResponseEntity<List<Condition>> getConditionsByPatientId(@PathVariable Long patient_id){
@@ -37,27 +37,37 @@ public class ConditionController {
     @Transactional
     @PostMapping("/{patientId}/add_condition")
     public ResponseEntity<String> addCondition(@PathVariable Long patientId, @RequestBody Map<String, Object> conditionData) {
+        if (conditionData.get("name") == null ||
+                conditionData.get("description") == null ||
+                conditionData.get("date") == null ||
+                conditionData.get("doctorId") == null) {
+            return ResponseEntity.badRequest().body("Missing required field(s)");
+        }
         String conditionName = (String) conditionData.get("name");
         String conditionDateStr = (String) conditionData.get("date");
         String conditionInfo = (String) conditionData.get("description");
 
-        // Parse doctorId string into long
-        Long doctorId =  Long.valueOf(conditionData.get("doctorId").toString());
+        Long doctorId;
+        try {
+            doctorId = Long.valueOf(conditionData.get("doctorId").toString());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid doctorId");
+        };
 
-        // Parse encounter_date string into a Date object
-        Date conditionDate = Date.valueOf(conditionDateStr);
+        Date conditionDate;
+        try {
+            conditionDate = Date.valueOf(conditionDateStr);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid date format");
+        }
 
         // Fetch the patient by ID
         String url = patientServiceUrl + "/patient/" + patientId;
         ResponseEntity<PatientDTO> response = restTemplate.getForEntity(url, PatientDTO.class);
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-
             Condition condition = new Condition(conditionName,  conditionInfo, conditionDate, patientId, doctorId);
-
-            // Save the Encounter object to the database
             conditionRepository.save(condition);
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Condition added successfully");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");

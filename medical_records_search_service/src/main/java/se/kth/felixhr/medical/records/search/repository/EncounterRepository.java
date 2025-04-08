@@ -46,7 +46,7 @@ public class EncounterRepository {
                             rs.getLong("doctor_id"),
                             rs.getDate("encounter_date"),
                             rs.getString("encounter_info"),
-                            rs.getString("patient_first_name") + " " + rs.getString("patient_last_name") // ✅ Patient Full Name
+                            rs.getString("patient_first_name") + " " + rs.getString("patient_last_name") // Patient Full Name
                     ));
                 }
             } catch (Exception e) {

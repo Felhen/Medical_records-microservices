@@ -31,7 +31,7 @@ public class ConditionRepository {
 
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, "%" + conditionName + "%");  // 🔹 Allows partial search
+                stmt.setString(1, "%" + conditionName + "%");  // Allows partial search
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {

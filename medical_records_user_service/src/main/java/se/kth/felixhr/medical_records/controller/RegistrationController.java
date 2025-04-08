@@ -13,6 +13,7 @@ import se.kth.felixhr.medical_records.security.KeycloakService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Map;
 
 @RestController
@@ -25,12 +26,25 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody Map<String, Object> userData) {
+        if (userData.get("username") == null || userData.get("email") == null ||
+                userData.get("password") == null || userData.get("role") == null) {
+            return ResponseEntity.badRequest().body("Missing required field(s)");
+        }
         String username = (String) userData.get("username");
         String email = (String) userData.get("email");
         String password = (String) userData.get("password");
         String role = (String) userData.get("role");
 
-        String keycloakId = keycloakService.createUserInKeycloak(username, email, password, role);
+        if (!Arrays.asList("PATIENT", "DOCTOR", "STAFF").contains(role)) {
+            return ResponseEntity.badRequest().body("Invalid role");
+        }
+
+        String keycloakId;
+        try {
+            keycloakId = keycloakService.createUserInKeycloak(username, email, password, role);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Keycloak error: " + e.getMessage());
+        }
         System.out.println(keycloakId); //DEBUG
         if (keycloakId == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Keycloak user creation failed");
@@ -44,11 +58,31 @@ public class RegistrationController {
         userRepository.save(user);
 
         if (role.equalsIgnoreCase("PATIENT")) {
+            if (userData.get("firstName") == null || userData.get("lastName") == null ||
+                    userData.get("birthdate") == null || userData.get("personNumber") == null) {
+                return ResponseEntity.badRequest().body("Missing required field(s)");
+            }
+
             String firstName = (String) userData.get("firstName");
             String lastName = (String) userData.get("lastName");
             String birthdateStr = (String) userData.get("birthdate");
-            Date birthdate = Date.valueOf(birthdateStr);
-            int personNumber = Integer.parseInt((String) userData.get("personNumber"));
+
+            Date birthdate;
+            try {
+                birthdate = Date.valueOf(birthdateStr);
+                if (birthdate.toLocalDate().isAfter(LocalDate.now())) {
+                    return ResponseEntity.badRequest().body("birthdate cannot be in the future");
+                }
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Invalid birthdate format");
+            }
+
+            int personNumber;
+            try {
+                personNumber = Integer.parseInt((String) userData.get("personNumber"));
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Invalid personNumber");
+            }
 
             Patient patient = new Patient(firstName, lastName, birthdate, personNumber, user);
             patientRepository.save(patient);
