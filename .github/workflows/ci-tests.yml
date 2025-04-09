@@ -7,39 +7,39 @@ on:
 
 jobs:
   node-tests:
-  name: Image Service (Node.js)
-  runs-on: ubuntu-latest
+    name: Image Service (Node.js)
+    runs-on: ubuntu-latest
 
-  defaults:
-    run:
-      working-directory: medical_records_image_service
+    defaults:
+      run:
+        working-directory: medical_records_image_service
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18.15.0'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.15.0'
 
-    - name: Check Node + npm
-      run: |
-        node -v
-        npm -v
-        which npm
+      - name: Check Node + npm
+        run: |
+          node -v
+          npm -v
+          which npm
 
-    - name: Remove node_modules (clean install)
-      run: rm -rf node_modules
+      - name: Remove node_modules (clean install)
+        run: rm -rf node_modules
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Make Jest executable
-      run: chmod +x node_modules/.bin/jest
+      - name: Make Jest executable
+        run: chmod +x node_modules/.bin/jest
 
-    - name: Run tests
-      run: npx jest
+      - name: Run tests
+        run: npx jest
 
   user-service-tests:
     name: User Service (Spring Boot)
