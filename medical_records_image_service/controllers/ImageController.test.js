@@ -93,7 +93,7 @@ describe("ImageController", () => {
 
     sinon.assert.calledWith(res.status, 400);
     sinon.assert.calledWith(res.json, sinon.match.has("error"));
-  });
+  }); 
 
   // Repo throws on getImagesByPatient
   it("should return 500 if repository get fails", async () => {
