@@ -1,0 +1,110 @@
+name: Microservices CI - Run Tests on Commit to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  node-tests:
+    name: Image Service (Node.js)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: medical_records_image_service
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.15.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+  user-service-tests:
+    name: User Service (Spring Boot)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: medical_records_user_service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '18'
+          distribution: 'temurin'
+
+      - name: Run tests
+        run: ./mvnw test
+
+  records-service-tests:
+    name: Records Service (Spring Boot)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: medical_records_records_service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '18'
+          distribution: 'temurin'
+
+      - name: Run tests
+        run: ./mvnw test
+
+  message-service-tests:
+    name: Message Service (Spring Boot)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: medical_records_message_service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '18'
+          distribution: 'temurin'
+
+      - name: Run tests
+        run: ./mvnw test
+
+  search-service-tests:
+    name: Search Service (Quarkus)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: medical_records_search_service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '18'
+          distribution: 'temurin'
+
+      - name: Run tests
+        run: ./mvnw test
