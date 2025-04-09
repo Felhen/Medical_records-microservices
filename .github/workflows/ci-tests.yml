@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: '18.15.0'
 
+      - name: Check Node + npm
+        run: |
+          node -v
+          npm -v
+          which npm
+
       - name: Install dependencies
         run: npm install
 
