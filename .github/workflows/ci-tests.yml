@@ -29,11 +29,14 @@ jobs:
           npm -v
           which npm
 
+       - name: List node_modules/.bin
+         run: ls -la node_modules/.bin
+
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
-        run: npm test
+        run: npx jest
 
   user-service-tests:
     name: User Service (Spring Boot)
