@@ -5,7 +5,8 @@ const sequelize = new Sequelize(
   process.env.DB_USER || 'felix',
   process.env.DB_PASSWORD || 'secret',
   {
-    host: process.env.DB_HOST || 'mysql-db',
+    host: process.env.DB_HOST || 'deploy.cloud.cbh.kth.se',
+    port: process.env.DB_PORT || 20074,
     dialect: 'mysql'
   }
 );
