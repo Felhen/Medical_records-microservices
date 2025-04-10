@@ -13,8 +13,14 @@ RUN npm install
 # Copy the entire frontend codebase
 COPY . .
 
-# Expose React dev server port
+# Build the React app for production
+RUN npm run build
+
+# Install a lightweight static server to serve the build folder
+RUN npm install -g serve
+
+# Expose port 3000 (CBH will use this)
 EXPOSE 3000
 
-# Start React app in dev mode (adjust if needed)
-CMD ["npm", "start"]
+# Start the static server
+CMD ["serve", "-s", "build", "-l", "3000"]
