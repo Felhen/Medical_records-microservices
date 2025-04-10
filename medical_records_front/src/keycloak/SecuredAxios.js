@@ -2,7 +2,7 @@
 import axios from 'axios';
 import keycloak from '../keycloak/keycloak';
 
-const securedAxios = (port = '8080') => {
+const securedAxios = (baseURL) => {
   const instance = axios.create({
     baseURL: baseURL,
   });
