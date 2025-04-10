@@ -126,13 +126,14 @@ const ImageEditor = ({ imageUrl }) => {
       formData.append("patient_id", patientId);
       formData.append("doctor_id", userId);
     
+      const API_BASE = process.env.REACT_APP_IMAGE_API || 'http://localhost:5000';
       try {
-        const response = await securedAxios('5000').post('/images/edit', formData, {
+        const response = await securedAxios(API_BASE).post('/images/edit', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-  
+
         alert(response.data.message);
       } catch (error) {
         console.error("Error saving edited image:", error);

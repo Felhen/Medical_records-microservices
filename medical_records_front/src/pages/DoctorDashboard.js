@@ -10,10 +10,13 @@ export default function DoctorDashboard() {
         loadPatients();
     }, []);
 
+    const API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+
     const loadPatients = async () => {
-        const result = await axios.get("http://localhost:8084/patients");
-        setPatients(result.data);
+      const result = await axios.get(`${API_BASE}/patients`);
+      setPatients(result.data);
     };
+    
 
     return (
         <div className="container mt-4">

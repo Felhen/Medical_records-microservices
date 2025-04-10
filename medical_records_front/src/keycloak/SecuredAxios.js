@@ -4,7 +4,7 @@ import keycloak from '../keycloak/keycloak';
 
 const securedAxios = (port = '8080') => {
   const instance = axios.create({
-    baseURL: `http://localhost:${port}`,
+    baseURL: baseURL,
   });
 
   instance.interceptors.request.use(async (config) => {

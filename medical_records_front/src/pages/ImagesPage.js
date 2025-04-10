@@ -9,7 +9,8 @@ const ImagesPage = () => {
   const { patientId } = useParams();
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-  
+
+  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_API || 'http://localhost:5000';
 
   useEffect(() => {
     fetchImages();
@@ -17,12 +18,12 @@ const ImagesPage = () => {
 
   const fetchImages = async () => {
     try {
-      const response = await securedAxios('5000').get(`/images/${patientId}`);
+      const response = await securedAxios(IMAGE_BASE_URL).get(`/images/${patientId}`);
       setImages(response.data.images || []);
     } catch (error) {
       console.error("Error fetching images:", error);
     }
-  };  
+  };
 
   const handleUpload = async (event) => {
     const formData = new FormData();
@@ -30,10 +31,10 @@ const ImagesPage = () => {
     formData.append("patient_id", patientId);
     formData.append("doctor_id", userId);
 
-    console.log([...formData.entries()]); // Log form data fields
+    console.log([...formData.entries()]);
 
     try {
-      const response = await securedAxios('5000').post('/images/upload', formData, {
+      const response = await securedAxios(IMAGE_BASE_URL).post('/images/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -52,10 +53,10 @@ const ImagesPage = () => {
         {images.length > 0 ? (
           images.map((image) => (
             <div key={image.image_id}>
-              <img 
-                src={`http://localhost:5000${image.path}`} 
-                alt="Patient Scan" 
-                width="300px" 
+              <img
+                src={`${IMAGE_BASE_URL}${image.path}`}
+                alt="Patient Scan"
+                width="300px"
               />
               <button onClick={() => setSelectedImage(image.path)}>Edit</button>
             </div>
@@ -65,10 +66,9 @@ const ImagesPage = () => {
         )}
       </div>
 
-      {selectedImage && <ImageEditor imageUrl={`http://localhost:5000${selectedImage}`} />}
+      {selectedImage && <ImageEditor imageUrl={`${IMAGE_BASE_URL}${selectedImage}`} />}
     </div>
   );
 };
 
 export default ImagesPage;
-

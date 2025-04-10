@@ -12,27 +12,28 @@ const SearchBar = () => {
     setSearchQuery(""); // Clears input field when search type changes
   }, [searchType]);
 
+  const API_BASE = process.env.REACT_APP_SEARCH_API || 'http://localhost:8083';
+
   const handleSearch = async () => {
     try {
       let response;
       if (searchType === "patientsByName") {
-        response = await securedAxios('8083').get("/search/patients", {
+        response = await securedAxios(API_BASE).get("/search/patients", {
           params: { name: searchQuery.trim() }
         });
       } else if (searchType === "patientsByDoctor") {
-        response = await securedAxios('8083').get("/search/patients/by-doctor", {
+        response = await securedAxios(API_BASE).get("/search/patients/by-doctor", {
           params: { doctorName: searchQuery.trim() }
         });
       } else if (searchType === "conditions") {
-        response = await securedAxios('8083').get("/search/conditions", {
+        response = await securedAxios(API_BASE).get("/search/conditions", {
           params: { conditionName: searchQuery.trim() }
         });
       } else if (searchType === "encountersByDoctorAndDate") {
-        response = await securedAxios('8083').get("/search/encounters/by-date", {
+        response = await securedAxios(API_BASE).get("/search/encounters/by-date", {
           params: { doctorName: searchQuery.trim(), date: searchDate },
         });
       }
-
 
       setSearchResults(response.data);
     } catch (error) {

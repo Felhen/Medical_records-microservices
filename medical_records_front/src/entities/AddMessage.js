@@ -20,8 +20,9 @@ export function SendMessagePage() {
   
       console.log(messageData);
   
-      const response = await securedAxios('8082').post('/send_message', messageData);
-  
+      const API_BASE = process.env.REACT_APP_MESSAGE_API || 'http://localhost:8082';
+      const response = await securedAxios(API_BASE).post('/send_message', messageData);
+
       console.log(response.data);
       setContent("");
     } catch (error) {

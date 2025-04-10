@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://felixhr-frontend.cloud.cbh.kth.se")
 public class PatientController {
 
     @Autowired

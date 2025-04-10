@@ -10,14 +10,17 @@ export default function StaffDashboard() {
     loadPatients();
   }, []);
 
+  const API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+
   const loadPatients = async () => {
     try {
-      const result = await securedAxios("8080").get("/patients");
+      const result = await securedAxios(API_BASE).get("/patients");
       setPatients(result.data);
     } catch (error) {
       console.error("Error loading patients:", error);
     }
   };
+  
 
   return (
     <div className="container mt-4">

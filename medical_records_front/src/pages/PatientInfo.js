@@ -10,21 +10,27 @@ export default function PatientInfo() {
     const [conditions, setConditions] = useState([]);
 
     useEffect(() => {
-        const fetchPatientInfo = async () => {
-            try {
-                const response = await securedAxios('8084').get(`/patient/${patientId}`);
-                setPatient(response.data);
-                const responseCond = await securedAxios('8081').get(`/patient/${patientId}/conditions`);
-                setConditions(responseCond.data);
-                const responseEnc = await securedAxios('8081').get(`/patient/${patientId}/encounters`);
-                setEncounters(responseEnc.data);
-                const responseObs = await securedAxios('8081').get(`/patient/${patientId}/observations`);
-                setObservations(responseObs.data);
-            } catch (error) {
-                // Handle error fetching patient information
-                console.error('Error fetching patient information:', error);
-            }
-        };
+      const USER_API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+      const RECORDS_API_BASE = process.env.REACT_APP_RECORDS_API || 'http://localhost:8081';
+    
+      const fetchPatientInfo = async () => {
+        try {
+          const response = await securedAxios(USER_API_BASE).get(`/patient/${patientId}`);
+          setPatient(response.data);
+    
+          const responseCond = await securedAxios(RECORDS_API_BASE).get(`/patient/${patientId}/conditions`);
+          setConditions(responseCond.data);
+    
+          const responseEnc = await securedAxios(RECORDS_API_BASE).get(`/patient/${patientId}/encounters`);
+          setEncounters(responseEnc.data);
+    
+          const responseObs = await securedAxios(RECORDS_API_BASE).get(`/patient/${patientId}/observations`);
+          setObservations(responseObs.data);
+        } catch (error) {
+          // Handle error fetching patient information
+          console.error('Error fetching patient information:', error);
+        }
+      };
 
         if (patientId) {
             fetchPatientInfo(); // Fetch patient information when the component mounts

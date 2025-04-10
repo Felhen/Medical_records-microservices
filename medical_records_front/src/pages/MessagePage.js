@@ -11,29 +11,32 @@ export default function MessagePage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const MESSAGE_API_BASE = process.env.REACT_APP_MESSAGE_API || 'http://localhost:8082';
+        const USER_API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+      
         const fetchMessages = async () => {
-            try {
-                const response = await securedAxios('8082').get(`/${userId}/inbox`);
-                setMessages(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            }
+          try {
+            const response = await securedAxios(MESSAGE_API_BASE).get(`/${userId}/inbox`);
+            setMessages(response.data);
+            setLoading(false);
+          } catch (error) {
+            console.error('Error fetching messages:', error);
+          }
         };
-
+      
         const fetchUserList = async () => {
-            try {
-                const userResponse = await axios.get('http://localhost:8084/users');
-                setUsers(userResponse.data);
-            } catch (error) {
-                console.error('Error fetching user list:', error);
-            }
+          try {
+            const userResponse = await axios.get(`${USER_API_BASE}/users`);
+            setUsers(userResponse.data);
+          } catch (error) {
+            console.error('Error fetching user list:', error);
+          }
         };
-
+      
         fetchMessages();
         fetchUserList();
-    }, [userId]);
-
+      }, [userId]);
+      
     // Function to get sender's username by ID
     const getSenderUsername = (senderId) => {
         const sender = users.find(user => user.id === senderId);

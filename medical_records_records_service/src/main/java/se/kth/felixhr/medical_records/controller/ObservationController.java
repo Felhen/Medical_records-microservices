@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://felixhr-frontend.cloud.cbh.kth.se")
 public class ObservationController {
 
     @Autowired

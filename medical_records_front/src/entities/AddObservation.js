@@ -23,7 +23,9 @@ const AddObservation = () => {
             doctorId,
           };
       
-          const response = await securedAxios('8081').post(`/${patientId}/add_observation`,observationDetails);
+          const API_BASE = process.env.REACT_APP_RECORDS_API || 'http://localhost:8081';
+          const response = await securedAxios(API_BASE).post(`/${patientId}/add_observation`, observationDetails);
+
           console.log(response.data)
         } catch (error) {
           console.error("Observation addition failed:", error);

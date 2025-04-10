@@ -40,8 +40,9 @@ const Registration = () => {
                 };
             }
     
-            const response = await axios.post('http://localhost:8084/register', userData);
-    
+            const API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+            const response = await axios.post(`${API_BASE}/register`, userData);
+
             console.log(response.data);
             // Redirect or perform any necessary actions after successful registration
             // ...

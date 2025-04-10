@@ -28,8 +28,10 @@ const AddCondition = () => {
             doctorId,
           };
       
-          const response = await securedAxios('8081').post(`/${patientId}/add_condition`,conditionDetails);
-      
+          const API_BASE = process.env.REACT_APP_RECORDS_API || 'http://localhost:8081';
+
+          const response = await securedAxios(API_BASE).post(`/${patientId}/add_condition`, conditionDetails);
+
           console.log(response.data);
         } catch (error) {
           console.error("Condition addition failed:", error);
