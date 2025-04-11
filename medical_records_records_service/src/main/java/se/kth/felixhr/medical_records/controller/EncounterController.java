@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("https://felixhr-frontend.cloud.cbh.kth.se")
+@CrossOrigin("https://felixhr-front.cloud.cbh.kth.se")
 public class EncounterController {
 
     @Autowired
