@@ -33,7 +33,7 @@ public class RegistrationController {
         String username = (String) userData.get("username");
         String email = (String) userData.get("email");
         String password = (String) userData.get("password");
-        String role = (String) userData.get("role");
+        String role = ((String) userData.get("role")).toUpperCase();
 
         if (!Arrays.asList("PATIENT", "DOCTOR", "STAFF").contains(role)) {
             return ResponseEntity.badRequest().body("Invalid role");
