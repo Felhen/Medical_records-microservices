@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("https://felixhr-front.cloud.cbh.kth.se")
+@CrossOrigin("https://felixhr-front.app.cloud.cbh.kth.se")
 public class MessageController {
 
     @Autowired

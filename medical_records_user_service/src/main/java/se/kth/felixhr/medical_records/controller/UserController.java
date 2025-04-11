@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @RestController
-@CrossOrigin("https://felixhr-frontend.cloud.cbh.kth.se")
+@CrossOrigin("https://felixhr-front.app.cloud.cbh.kth.se")
 public class UserController {
 
     @Autowired

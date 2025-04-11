@@ -24,7 +24,7 @@ const keycloak = new Keycloak({}, {
 
 
 app.use(cors({
-  origin: 'https://felixhr-front.cloud.cbh.kth.se',
+  origin: 'https://felixhr-front.app.cloud.cbh.kth.se',
   credentials: true,
   exposedHeaders: ['Authorization']
 }));
