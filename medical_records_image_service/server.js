@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 const keycloak = new Keycloak({}, {
   "realm": "medical-records",
-  "auth-server-url": "http://felixhr-keycloak.cloud.cbh.kth.se/",
+  "auth-server-url": "http://felixh-keycloak.cloud.cbh.kth.se/",
   "ssl-required": "none",
   "resource": "medical_app",
   "bearer-only": true,
@@ -24,7 +24,7 @@ const keycloak = new Keycloak({}, {
 
 
 app.use(cors({
-  origin: 'https://felixhr-frontend.cloud.cbh.kth.se',
+  origin: 'https://felixhr-front.cloud.cbh.kth.se',
   credentials: true,
   exposedHeaders: ['Authorization']
 }));
