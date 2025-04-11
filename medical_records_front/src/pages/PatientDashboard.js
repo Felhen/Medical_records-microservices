@@ -10,8 +10,8 @@ export default function PatientInfo() {
     const [conditions, setConditions] = useState([]);
 
     useEffect(() => {
-        const USER_API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
-        const RECORDS_API_BASE = process.env.REACT_APP_RECORDS_API || 'http://localhost:8081';
+        const USER_API_BASE = process.env.REACT_APP_USER_API;
+        const RECORDS_API_BASE = process.env.REACT_APP_RECORDS_API;
       
         const fetchPatientInfo = async () => {
           try {

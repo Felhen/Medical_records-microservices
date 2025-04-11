@@ -12,7 +12,7 @@ const SearchBar = () => {
     setSearchQuery(""); // Clears input field when search type changes
   }, [searchType]);
 
-  const API_BASE = process.env.REACT_APP_SEARCH_API || 'http://localhost:8083';
+  const API_BASE = process.env.REACT_APP_SEARCH_API;
 
   const handleSearch = async () => {
     try {

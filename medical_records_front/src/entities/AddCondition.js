@@ -28,7 +28,7 @@ const AddCondition = () => {
             doctorId,
           };
       
-          const API_BASE = process.env.REACT_APP_RECORDS_API || 'http://localhost:8081';
+          const API_BASE = process.env.REACT_APP_RECORDS_API;
 
           const response = await securedAxios(API_BASE).post(`/${patientId}/add_condition`, conditionDetails);
 

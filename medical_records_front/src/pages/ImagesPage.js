@@ -10,7 +10,7 @@ const ImagesPage = () => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_API || 'http://localhost:5000';
+  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_API;
 
   useEffect(() => {
     fetchImages();

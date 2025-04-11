@@ -40,7 +40,7 @@ const Registration = () => {
                 };
             }
     
-            const API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+            const API_BASE = process.env.REACT_APP_USER_API;
             const response = await axios.post(`${API_BASE}/register`, userData);
 
             console.log(response.data);

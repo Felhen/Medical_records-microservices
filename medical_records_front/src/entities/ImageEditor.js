@@ -126,7 +126,7 @@ const ImageEditor = ({ imageUrl }) => {
       formData.append("patient_id", patientId);
       formData.append("doctor_id", userId);
     
-      const API_BASE = process.env.REACT_APP_IMAGE_API || 'http://localhost:5000';
+      const API_BASE = process.env.REACT_APP_IMAGE_API;
       try {
         const response = await securedAxios(API_BASE).post('/images/edit', formData, {
           headers: {

@@ -11,8 +11,8 @@ export default function MessagePage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const MESSAGE_API_BASE = process.env.REACT_APP_MESSAGE_API || 'http://localhost:8082';
-        const USER_API_BASE = process.env.REACT_APP_USER_API || 'http://localhost:8084';
+        const MESSAGE_API_BASE = process.env.REACT_APP_MESSAGE_API;
+        const USER_API_BASE = process.env.REACT_APP_USER_API;
       
         const fetchMessages = async () => {
           try {
