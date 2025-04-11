@@ -1,7 +1,6 @@
 const cors = require("cors");
-const sequelize = require('./config/db'); // Make sure this points to your Sequelize instance
+const sequelize = require('./config/db');
 
-// Connect to DB and sync the Image model
 sequelize.sync()
   .then(() => console.log("Database synced"))
   .catch(err => console.error("Sequelize sync error:", err));
@@ -15,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 const keycloak = new Keycloak({}, {
   "realm": "medical-records",
-  "auth-server-url": "http://felix2-keycloak.app.cloud.cbh.kth.se/",
+  "auth-server-url": "https://felix2-keycloak.app.cloud.cbh.kth.se/",
   "ssl-required": "none",
   "resource": "medical_app",
   "bearer-only": true,
