@@ -20,10 +20,9 @@ const ImageEditor = ({ imageUrl }) => {
       isDrawingMode: false,
     });
     
-    // Ensure freeDrawingBrush is defined so we can change its color and width later
     fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas);
     
-    // Start with empty dimensions; they will be updated on image load
+    // Start with empty dimensions that will be updated on image load
     fabricCanvas.setDimensions({ width: 0, height: 0 });
     setCanvas(fabricCanvas);
 
@@ -49,7 +48,7 @@ const ImageEditor = ({ imageUrl }) => {
       const newHeight = img.naturalHeight;
 
       try {
-        // Update canvas dimensions
+        // Update canvas dimensions to match image dimensions
         canvas.setDimensions({ width: newWidth, height: newHeight });
         canvas.calcOffset();
 
@@ -85,7 +84,6 @@ const ImageEditor = ({ imageUrl }) => {
     if (!canvas) return;
     canvas.isDrawingMode = !canvas.isDrawingMode;
 
-    // The freeDrawingBrush should now be defined from the initialization above.
     canvas.freeDrawingBrush.color = brushColor;
     canvas.freeDrawingBrush.width = brushSize;
   };

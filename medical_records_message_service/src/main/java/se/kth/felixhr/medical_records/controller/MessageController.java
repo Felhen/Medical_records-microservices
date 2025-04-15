@@ -44,7 +44,7 @@ public class MessageController {
     public ResponseEntity<List<Message>> getInboxMessages(@PathVariable Long userId) {
         System.out.println(userId);
         try {
-            List<Message> inboxMessages = messageRepository.findByReceiver_id(userId); // Implement this method in your service
+            List<Message> inboxMessages = messageRepository.findByReceiver_id(userId);
             return ResponseEntity.ok(inboxMessages);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

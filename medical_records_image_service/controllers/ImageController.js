@@ -7,7 +7,7 @@ const handleImageUpload = async (req, res, isEdit = false) => {
   const doctorId = parseInt(req.body.doctor_id, 10);
 
   if (!req.file || isNaN(patientId) || isNaN(doctorId)) {
-    return res.status(400).json({ error: "Missing file or required numeric parameters." });
+    return res.status(400).json({ error: "Missing file or required id's." });
   }
 
   try {
